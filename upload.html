@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tellas Share</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: #fff8f0;
+  --surface: #ffffff;
+  --surface2: #fef3e8;
+  --border: rgba(0,0,0,0.08);
+  --pink:   #ff4d8d;
+  --orange: #ff7c2a;
+  --yellow: #ffd124;
+  --green:  #22d98a;
+  --blue:   #3b8bff;
+  --purple: #9b5aff;
+  --text:   #1a1025;
+  --muted:  #9b8fa8;
+  --radius: 16px;
+  --font-body: 'Nunito', sans-serif;
+  --font-display: 'Righteous', cursive;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; top: -120px; left: -80px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(255,77,141,0.18) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+  animation: blob1 8s ease-in-out infinite alternate;
+}
+body::after {
+  content: '';
+  position: fixed; bottom: -100px; right: -80px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(59,139,255,0.16) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+  animation: blob2 10s ease-in-out infinite alternate;
+}
+@keyframes blob1 { from{transform:scale(1) translate(0,0);} to{transform:scale(1.1) translate(30px,20px);} }
+@keyframes blob2 { from{transform:scale(1) translate(0,0);} to{transform:scale(1.08) translate(-20px,-30px);} }
+.blob-green {
+  position: fixed; top: 40%; right: -60px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(34,217,138,0.13) 0%, transparent 70%);
+  pointer-events: none; z-index: 0; border-radius: 50%;
+  animation: blob2 12s ease-in-out infinite alternate;
+}
+.blob-yellow {
+  position: fixed; bottom: 20%; left: -40px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(255,209,36,0.18) 0%, transparent 70%);
+  pointer-events: none; z-index: 0; border-radius: 50%;
+  animation: blob1 9s ease-in-out infinite alternate;
+}
+
+/* Header */
+header {
+  width: 100%; max-width: 880px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 24px 0;
+  position: relative; z-index: 10;
+}
+.wordmark {
+  font-family: var(--font-display); font-size: 22px;
+  background: linear-gradient(135deg, var(--pink), var(--orange), var(--yellow));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+/* Lang selector */
+.lang-selector { position: relative; }
+.lang-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 2px solid var(--border); border-radius: 40px;
+  padding: 8px 16px; cursor: pointer; color: var(--text);
+  font-family: var(--font-body); font-size: 13px; font-weight: 700;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.lang-btn:hover { border-color: var(--pink); box-shadow: 0 4px 16px rgba(255,77,141,0.15); }
+.lang-btn .globe { font-size: 17px; }
+.lang-btn .chevron { color: var(--muted); font-size: 10px; transition: transform 0.2s; }
+.lang-btn.open .chevron { transform: rotate(180deg); }
+.lang-dropdown {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 6px; min-width: 210px; display: none; z-index: 100;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12); animation: dropIn 0.15s ease;
+  max-height: 340px; overflow-y: auto;
+}
+.lang-dropdown.open { display: block; }
+@keyframes dropIn { from{opacity:0;transform:translateY(-6px);} to{opacity:1;transform:translateY(0);} }
+.lang-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+  cursor: pointer; font-size: 13px; font-weight: 600; transition: background 0.15s;
+}
+.lang-option:hover { background: rgba(255,77,141,0.07); }
+.lang-option.active { background: rgba(255,77,141,0.1); color: var(--pink); }
+.lang-option .flag { font-size: 18px; line-height: 1; }
+.lang-option .native { color: var(--muted); font-size: 11px; font-weight: 400; }
+
+/* Hero */
+.hero {
+  width: 100%; max-width: 560px;
+  text-align: center; padding: 40px 24px 0;
+  position: relative; z-index: 5;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 40px); line-height: 1.2;
+  background: linear-gradient(135deg, var(--purple), var(--blue), var(--green));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 10px;
+}
+.hero p { color: var(--muted); font-size: 15px; font-weight: 600; margin-bottom: 28px; }
+
+/* Tabs */
+.tabs {
+  display: flex; gap: 6px;
+  background: var(--surface); border-radius: 20px; padding: 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid var(--border);
+  width: fit-content; margin: 0 auto;
+}
+.tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: 14px; cursor: pointer;
+  font-size: 13.5px; font-weight: 800; transition: all 0.2s;
+  color: var(--muted); border: none; background: transparent;
+  font-family: var(--font-body); white-space: nowrap;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: white; transform: translateY(-1px); }
+.tab[data-mode="text"].active { background: linear-gradient(135deg,var(--pink),var(--orange)); box-shadow: 0 4px 16px rgba(255,77,141,0.35); }
+.tab[data-mode="file"].active { background: linear-gradient(135deg,var(--blue),var(--purple)); box-shadow: 0 4px 16px rgba(59,139,255,0.35); }
+.tab[data-mode="url"].active  { background: linear-gradient(135deg,var(--green),#16b974);     box-shadow: 0 4px 16px rgba(34,217,138,0.35); }
+.tab-icon { font-size: 16px; }
+
+/* Card */
+main { width: 100%; max-width: 500px; padding: 24px 24px 100px; position: relative; z-index: 5; }
+.card {
+  background: var(--surface); border-radius: 24px; padding: 36px 32px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+}
+.card::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height:4px;
+  border-radius: 24px 24px 0 0; transition: background 0.4s;
+}
+.card.mode-text::before { background: linear-gradient(90deg,var(--pink),var(--orange),var(--yellow)); }
+.card.mode-file::before { background: linear-gradient(90deg,var(--blue),var(--purple),var(--pink)); }
+.card.mode-url::before  { background: linear-gradient(90deg,var(--green),var(--blue),var(--purple)); }
+
+.mode-panel { display: none; animation: panelIn 0.25s ease; }
+.mode-panel.active { display: block; }
+@keyframes panelIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+.panel-title { font-family: var(--font-display); font-size: 22px; font-weight:400; margin-bottom:4px; }
+.mode-text .panel-title { background:linear-gradient(135deg,var(--pink),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.mode-file .panel-title { background:linear-gradient(135deg,var(--blue),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.mode-url  .panel-title { background:linear-gradient(135deg,var(--green),#16b974);      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.panel-sub { color:var(--muted); font-size:13px; font-weight:600; margin-bottom:22px; }
+
+/* Fields */
+.field { margin-bottom: 18px; }
+.field label { display:block; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:7px; }
+.mode-text .field label { color: var(--pink); }
+.mode-file .field label { color: var(--blue); }
+.mode-url  .field label { color: var(--green); }
+
+textarea, .url-input {
+  width:100%; padding:14px 16px;
+  background:var(--surface2); border:2px solid transparent;
+  border-radius:var(--radius); color:var(--text);
+  font-family:var(--font-body); font-size:14px; font-weight:600;
+  line-height:1.6; outline:none; transition:border-color 0.2s;
+}
+textarea { resize:none; height:130px; }
+textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight:600; }
+.mode-text textarea:focus { border-color: rgba(255,77,141,0.35); }
+.mode-url .url-input:focus { border-color: rgba(34,217,138,0.4); }
+
+/* Upload */
+.upload-zone {
+  border: 2.5px dashed rgba(59,139,255,0.3); border-radius:var(--radius);
+  padding:30px 24px; text-align:center; cursor:pointer;
+  transition:all 0.2s; position:relative;
+  background:linear-gradient(135deg,rgba(59,139,255,0.03),rgba(155,90,255,0.03));
+}
+.upload-zone:hover,.upload-zone.dragover { border-color:var(--blue); background:rgba(59,139,255,0.06); transform:translateY(-2px); }
+.upload-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.upload-icon { font-size:32px; margin-bottom:8px; display:block; animation:bounce 2.5s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
+.upload-hint { font-size:13px; color:var(--muted); font-weight:700; }
+.upload-hint strong { color:var(--blue); font-weight:900; }
+.file-selected {
+  display:flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg,rgba(59,139,255,0.08),rgba(155,90,255,0.08));
+  border:1.5px solid rgba(59,139,255,0.2);
+  border-radius:10px; padding:10px 14px; margin-top:10px;
+  font-size:13px; font-weight:700;
+}
+.file-selected .file-icon { font-size:20px; }
+.file-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--blue); }
+.file-clear { cursor:pointer; color:var(--muted); font-size:16px; font-weight:900; transition:color 0.2s; }
+.file-clear:hover { color:var(--pink); }
+
+/* Buttons */
+.btn-primary {
+  width:100%; padding:15px; border:none; border-radius:var(--radius);
+  color:white; font-family:var(--font-display); font-size:15px; font-weight:400;
+  cursor:pointer; position:relative; overflow:hidden;
+  transition:transform 0.15s, box-shadow 0.2s; letter-spacing:0.5px;
+  text-shadow:0 1px 3px rgba(0,0,0,0.15);
+}
+.btn-primary:hover { transform:translateY(-2px); }
+.btn-primary:active { transform:translateY(0); }
+.btn-primary::after { content:''; position:absolute; inset:0; background:linear-gradient(transparent 40%,rgba(255,255,255,0.1)); }
+.mode-text .btn-primary { background:linear-gradient(135deg,var(--pink) 0%,var(--orange) 60%,var(--yellow) 100%); box-shadow:0 6px 24px rgba(255,77,141,0.35); }
+.mode-text .btn-primary:hover { box-shadow:0 10px 32px rgba(255,77,141,0.45); }
+.mode-file .btn-primary { background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 6px 24px rgba(59,139,255,0.35); }
+.mode-file .btn-primary:hover { box-shadow:0 10px 32px rgba(59,139,255,0.45); }
+.mode-url  .btn-primary { background:linear-gradient(135deg,var(--green),#16b974,var(--blue)); box-shadow:0 6px 24px rgba(34,217,138,0.35); }
+.mode-url  .btn-primary:hover { box-shadow:0 10px 32px rgba(34,217,138,0.45); }
+
+/* Result box */
+.result-box { display:none; margin-top:18px; border-radius:var(--radius); padding:14px 16px; animation:fadeUp 0.3s ease; }
+.result-box.show { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.mode-text .result-box { background:rgba(255,77,141,0.07); border:2px solid rgba(255,77,141,0.2); }
+.mode-file .result-box { background:rgba(59,139,255,0.07);  border:2px solid rgba(59,139,255,0.2); }
+.mode-url  .result-box { background:rgba(34,217,138,0.07);  border:2px solid rgba(34,217,138,0.2); }
+.result-label { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; font-weight:800; margin-bottom:8px; }
+.mode-text .result-label { color:var(--pink); }
+.mode-file .result-label { color:var(--blue); }
+.mode-url  .result-label { color:var(--green); }
+.link-row { display:flex; align-items:center; gap:10px; }
+.link-text { flex:1; font-size:12.5px; color:var(--text); word-break:break-all; line-height:1.5; opacity:0.75; font-weight:700; }
+.copy-btn {
+  flex-shrink:0; border:none; border-radius:10px; padding:8px 14px;
+  font-size:12px; color:white; cursor:pointer; transition:transform 0.15s, box-shadow 0.2s;
+  font-family:var(--font-body); font-weight:800;
+}
+.copy-btn:hover { transform:translateY(-1px); }
+.mode-text .copy-btn { background:linear-gradient(135deg,var(--pink),var(--orange)); box-shadow:0 4px 14px rgba(255,77,141,0.3); }
+.mode-file .copy-btn { background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 4px 14px rgba(59,139,255,0.3); }
+.mode-url  .copy-btn { background:linear-gradient(135deg,var(--green),#16b974);     box-shadow:0 4px 14px rgba(34,217,138,0.3); }
+.copy-btn.copied { background:linear-gradient(135deg,#22d98a,#16b974) !important; box-shadow:0 4px 14px rgba(34,217,138,0.35) !important; }
+
+/* View page */
+#view-page { display:none; width:100%; max-width:520px; padding:40px 24px 100px; position:relative; z-index:5; }
+.view-card {
+  background:var(--surface); border-radius:24px; padding:36px 32px;
+  position:relative; overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.08);
+}
+.view-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:24px 24px 0 0; }
+.view-card.type-text::before  { background:linear-gradient(90deg,var(--pink),var(--orange),var(--yellow)); }
+.view-card.type-file::before  { background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink)); }
+.view-card.type-url::before   { background:linear-gradient(90deg,var(--green),var(--blue),var(--purple)); }
+
+.view-badge { display:inline-flex; align-items:center; gap:6px; border-radius:40px; padding:5px 14px; font-size:11.5px; font-weight:800; margin-bottom:16px; }
+.type-text .view-badge { background:rgba(255,77,141,0.1); border:1.5px solid rgba(255,77,141,0.25); color:var(--pink); }
+.type-file .view-badge { background:rgba(59,139,255,0.1); border:1.5px solid rgba(59,139,255,0.25); color:var(--blue); }
+.type-url  .view-badge { background:rgba(34,217,138,0.1); border:1.5px solid rgba(34,217,138,0.25); color:var(--green); }
+
+.view-card h2 { font-family:var(--font-display); font-size:21px; font-weight:400; margin-bottom:20px; }
+.text-content {
+  background:var(--surface2); border-left:4px solid var(--pink);
+  border-radius:0 12px 12px 0; padding:16px 18px;
+  font-size:14.5px; line-height:1.8; font-weight:600;
+  color:var(--text); white-space:pre-wrap; word-break:break-word;
+}
+.dl-btn {
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border:none; border-radius:var(--radius); padding:14px 24px;
+  color:white; text-decoration:none; font-size:14px;
+  font-family:var(--font-body); font-weight:800;
+  transition:transform 0.15s, box-shadow 0.2s;
+  box-shadow:0 6px 24px rgba(59,139,255,0.3);
+}
+.dl-btn:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(59,139,255,0.4); }
+.url-redirect {
+  display:inline-flex; align-items:center; gap:10px;
+  background:linear-gradient(135deg,var(--green),#16b974);
+  border:none; border-radius:var(--radius); padding:14px 24px;
+  color:white; text-decoration:none; font-size:14px;
+  font-family:var(--font-body); font-weight:800;
+  transition:transform 0.15s, box-shadow 0.2s;
+  box-shadow:0 6px 24px rgba(34,217,138,0.3);
+}
+.url-redirect:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(34,217,138,0.4); }
+.url-original { margin-top:12px; font-size:12px; color:var(--muted); font-weight:600; word-break:break-all; }
+
+/* RTL */
+[dir="rtl"] .text-content { border-left:none; border-right:4px solid var(--pink); border-radius:12px 0 0 12px; }
+[dir="rtl"] .file-selected { flex-direction:row-reverse; }
+
+/* Footer */
+footer {
+  position:fixed; bottom:0; left:0; right:0;
+  padding:14px 24px; text-align:center;
+  font-size:12px; font-weight:700; color:var(--muted);
+  background:linear-gradient(transparent,var(--bg)); z-index:5;
+}
+
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+
+</style>
+</head>
+<body>
+
+<div class="blob-green"></div>
+<div class="blob-yellow"></div>
+
+<header>
+  <div class="wordmark">TellasShare</div>
+  <div class="lang-selector">
+    <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+      <span class="globe">🌐</span>
+      <span id="currentLangName">English</span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown"></div>
+  </div>
+</header>
+
+<div class="hero" id="heroSection">
+  <h1 data-i18n="heroTitle">Share Anything,<br>Instantly</h1>
+  <p data-i18n="heroSub">Text, files, and links — all in one place.</p>
+  <div class="tabs">
+    <button class="tab active" data-mode="text" onclick="switchMode('text')">
+      <span class="tab-icon">✍️</span><span data-i18n="tabText">Text</span>
+    </button>
+    <button class="tab" data-mode="file" onclick="switchMode('file')">
+      <span class="tab-icon">📎</span><span data-i18n="tabFile">File</span>
+    </button>
+    <button class="tab" data-mode="url" onclick="switchMode('url')">
+      <span class="tab-icon">🔗</span><span data-i18n="tabUrl">URL Shortener</span>
+    </button>
+  </div>
+</div>
+
+<main id="mainSection">
+  <div class="card mode-text" id="mainCard">
+
+    <!-- TEXT -->
+    <div class="mode-panel active" id="panel-text">
+      <div class="panel-title" data-i18n="textTitle">Text Sharing</div>
+      <div class="panel-sub" data-i18n="textSub">Share text instantly with a link.</div>
+      <div class="field">
+        <label data-i18n="textLabel">Your Text</label>
+        <textarea id="textInput" data-i18n-placeholder="textPlaceholder" placeholder="Type or paste anything here…"></textarea>
+      </div>
+      <button class="btn-primary" onclick="doShare('text')" data-i18n="generateBtn">Generate Share Link</button>
+      <div class="result-box" id="result-text">
+        <div class="result-label" data-i18n="readyLabel">✓ Link Ready</div>
+        <div class="link-row">
+          <span class="link-text" id="linkText-text"></span>
+          <button class="copy-btn" id="copyBtn-text" onclick="copyLink('text')" data-i18n="copyBtn">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILE -->
+    <div class="mode-panel" id="panel-file">
+      <div class="panel-title" data-i18n="fileTitle">File Sharing</div>
+      <div class="panel-sub" data-i18n="fileSub">Send files fast.</div>
+      <div class="field">
+        <label data-i18n="uploadLabel">Upload File</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" onchange="onFileSelect(this)">
+          <span class="upload-icon">📎</span>
+          <div class="upload-hint" data-i18n="uploadHint"><strong>Choose a file</strong> or drag and drop</div>
+        </div>
+        <div class="file-selected" id="fileSelected" style="display:none;">
+          <span class="file-icon">📄</span>
+          <span class="file-name" id="fileName"></span>
+          <span class="file-clear" onclick="clearFile()">✕</span>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="doShare('file')" data-i18n="generateBtn">Generate Share Link</button>
+      <div class="result-box" id="result-file">
+        <div class="result-label" data-i18n="readyLabel">✓ Link Ready</div>
+        <div class="link-row">
+          <span class="link-text" id="linkText-file"></span>
+          <button class="copy-btn" id="copyBtn-file" onclick="copyLink('file')" data-i18n="copyBtn">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- URL -->
+    <div class="mode-panel" id="panel-url">
+      <div class="panel-title" data-i18n="urlTitle">URL Shortener</div>
+      <div class="panel-sub" data-i18n="urlSub">Turn long links into clean, short ones.</div>
+      <div class="field">
+        <label data-i18n="urlLabel">Long URL</label>
+        <input class="url-input" type="url" id="urlInput" data-i18n-placeholder="urlPlaceholder" placeholder="https://example.com/very/long/link…">
+      </div>
+      <button class="btn-primary" onclick="doShare('url')" data-i18n="shortenBtn">Shorten URL</button>
+      <div class="result-box" id="result-url">
+        <div class="result-label" data-i18n="shortReadyLabel">✓ Short Link Ready</div>
+        <div class="link-row">
+          <span class="link-text" id="linkText-url"></span>
+          <button class="copy-btn" id="copyBtn-url" onclick="copyLink('url')" data-i18n="copyBtn">Copy</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Shared view -->
+<div id="view-page">
+  <div class="view-card" id="viewCard">
+    <div class="view-badge" id="viewBadge">✦ Shared</div>
+    <h2 id="viewTitle" data-i18n="sharedTitle">Someone shared this with you</h2>
+    <div id="viewContent"></div>
+  </div>
+</div>
+
+<footer>TellasShare · <span data-i18n="footerText">Secure sharing, any language</span></footer>
+
+<script>
+
+const languages = [
+  {code:'en',name:'English',   native:'English',   flag:'🇬🇧',dir:'ltr'},
+  {code:'es',name:'Spanish',   native:'Español',   flag:'🇪🇸',dir:'ltr'},
+  {code:'fr',name:'French',    native:'Français',  flag:'🇫🇷',dir:'ltr'},
+  {code:'de',name:'German',    native:'Deutsch',   flag:'🇩🇪',dir:'ltr'},
+  {code:'pt',name:'Portuguese',native:'Português', flag:'🇧🇷',dir:'ltr'},
+  {code:'it',name:'Italian',   native:'Italiano',  flag:'🇮🇹',dir:'ltr'},
+  {code:'ja',name:'Japanese',  native:'日本語',     flag:'🇯🇵',dir:'ltr'},
+  {code:'zh',name:'Chinese',   native:'中文',       flag:'🇨🇳',dir:'ltr'},
+  {code:'ko',name:'Korean',    native:'한국어',     flag:'🇰🇷',dir:'ltr'},
+  {code:'hi',name:'Hindi',     native:'हिन्दी',     flag:'🇮🇳',dir:'ltr'},
+  {code:'ar',name:'Arabic',    native:'العربية',   flag:'🇸🇦',dir:'rtl'},
+  {code:'ru',name:'Russian',   native:'Русский',   flag:'🇷🇺',dir:'ltr'},
+  {code:'tr',name:'Turkish',   native:'Türkçe',    flag:'🇹🇷',dir:'ltr'},
+  {code:'nl',name:'Dutch',     native:'Nederlands',flag:'🇳🇱',dir:'ltr'},
+  {code:'pl',name:'Polish',    native:'Polski',    flag:'🇵🇱',dir:'ltr'},
+];
+
+const T = {
+  en:{heroTitle:'Share Anything,<br>Instantly',heroSub:'Text, files, and links — all in one place.',tabText:'Text',tabFile:'File',tabUrl:'URL Shortener',textTitle:'Text Sharing',textSub:'Share text instantly with a link.',textLabel:'Your Text',textPlaceholder:'Type or paste anything here…',fileTitle:'File Sharing',fileSub:'Send files fast.',uploadLabel:'Upload File',uploadHint:'<strong>Choose a file</strong> or drag and drop',urlTitle:'URL Shortener',urlSub:'Turn long links into clean, short ones.',urlLabel:'Long URL',urlPlaceholder:'https://example.com/very/long/link…',generateBtn:'Generate Share Link',shortenBtn:'Shorten URL',readyLabel:'✓ Link Ready',shortReadyLabel:'✓ Short Link Ready',copyBtn:'Copy',copiedBtn:'Copied!',sharedTitle:'Someone shared this with you',badgeText:'Shared Text',badgeFile:'Shared File',badgeUrl:'Short Link',openLink:'Open Link →',downloadBtn:'⬇ Download',footerText:'Secure sharing, any language'},
+  es:{heroTitle:'Comparte Cualquier Cosa,<br>Al Instante',heroSub:'Texto, archivos y enlaces — todo en un lugar.',tabText:'Texto',tabFile:'Archivo',tabUrl:'Acortador',textTitle:'Compartir Texto',textSub:'Comparte texto al instante con un enlace.',textLabel:'Tu Texto',textPlaceholder:'Escribe o pega aquí…',fileTitle:'Compartir Archivo',fileSub:'Envía archivos rápido.',uploadLabel:'Subir Archivo',uploadHint:'<strong>Elige un archivo</strong> o arrastra',urlTitle:'Acortador de URL',urlSub:'Convierte enlaces largos en cortos.',urlLabel:'URL Larga',urlPlaceholder:'https://ejemplo.com/enlace/muy/largo…',generateBtn:'Generar Enlace',shortenBtn:'Acortar URL',readyLabel:'✓ Enlace Listo',shortReadyLabel:'✓ Enlace Corto Listo',copyBtn:'Copiar',copiedBtn:'¡Copiado!',sharedTitle:'Alguien compartió esto contigo',badgeText:'Texto Compartido',badgeFile:'Archivo Compartido',badgeUrl:'Enlace Corto',openLink:'Abrir Enlace →',downloadBtn:'⬇ Descargar',footerText:'Compartir seguro, en cualquier idioma'},
+  fr:{heroTitle:'Partagez N\'importe Quoi,<br>Instantanément',heroSub:'Textes, fichiers et liens — tout en un.',tabText:'Texte',tabFile:'Fichier',tabUrl:'Raccourcisseur',textTitle:'Partage de Texte',textSub:'Partagez du texte avec un lien.',textLabel:'Votre Texte',textPlaceholder:'Écrivez ou collez ici…',fileTitle:'Partage de Fichier',fileSub:'Envoyez des fichiers rapidement.',uploadLabel:'Téléverser',uploadHint:'<strong>Choisissez un fichier</strong> ou glissez',urlTitle:'Raccourcisseur d\'URL',urlSub:'Transformez les longs liens en courts.',urlLabel:'URL Longue',urlPlaceholder:'https://exemple.com/lien/tres/long…',generateBtn:'Générer un Lien',shortenBtn:'Raccourcir l\'URL',readyLabel:'✓ Lien Prêt',shortReadyLabel:'✓ Lien Court Prêt',copyBtn:'Copier',copiedBtn:'Copié !',sharedTitle:'Quelqu\'un a partagé ceci avec vous',badgeText:'Texte Partagé',badgeFile:'Fichier Partagé',badgeUrl:'Lien Court',openLink:'Ouvrir le Lien →',downloadBtn:'⬇ Télécharger',footerText:'Partage sécurisé, dans toutes les langues'},
+  de:{heroTitle:'Alles Teilen,<br>Sofort',heroSub:'Texte, Dateien und Links — alles an einem Ort.',tabText:'Text',tabFile:'Datei',tabUrl:'URL-Kürzer',textTitle:'Text Teilen',textSub:'Text sofort mit einem Link teilen.',textLabel:'Ihr Text',textPlaceholder:'Hier eingeben oder einfügen…',fileTitle:'Datei Teilen',fileSub:'Dateien schnell senden.',uploadLabel:'Datei Hochladen',uploadHint:'<strong>Datei auswählen</strong> oder ziehen',urlTitle:'URL-Kürzer',urlSub:'Lange Links in kurze umwandeln.',urlLabel:'Langer Link',urlPlaceholder:'https://beispiel.de/sehr/langer/link…',generateBtn:'Link Erstellen',shortenBtn:'URL Kürzen',readyLabel:'✓ Link Bereit',shortReadyLabel:'✓ Kurzer Link Bereit',copyBtn:'Kopieren',copiedBtn:'Kopiert!',sharedTitle:'Jemand hat dies mit Ihnen geteilt',badgeText:'Geteilter Text',badgeFile:'Geteilte Datei',badgeUrl:'Kurzer Link',openLink:'Link Öffnen →',downloadBtn:'⬇ Herunterladen',footerText:'Sicheres Teilen in jeder Sprache'},
+  pt:{heroTitle:'Compartilhe Qualquer Coisa,<br>Instantaneamente',heroSub:'Textos, arquivos e links — tudo em um lugar.',tabText:'Texto',tabFile:'Arquivo',tabUrl:'Encurtador',textTitle:'Compartilhar Texto',textSub:'Compartilhe texto com um link.',textLabel:'Seu Texto',textPlaceholder:'Digite ou cole aqui…',fileTitle:'Compartilhar Arquivo',fileSub:'Envie arquivos rapidamente.',uploadLabel:'Enviar Arquivo',uploadHint:'<strong>Escolha um arquivo</strong> ou arraste',urlTitle:'Encurtador de URL',urlSub:'Transforme links longos em curtos.',urlLabel:'URL Longa',urlPlaceholder:'https://exemplo.com/link/muito/longo…',generateBtn:'Gerar Link',shortenBtn:'Encurtar URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Curto Pronto',copyBtn:'Copiar',copiedBtn:'Copiado!',sharedTitle:'Alguém compartilhou isso com você',badgeText:'Texto Compartilhado',badgeFile:'Arquivo Compartilhado',badgeUrl:'Link Curto',openLink:'Abrir Link →',downloadBtn:'⬇ Baixar',footerText:'Compartilhamento seguro, em qualquer idioma'},
+  it:{heroTitle:'Condividi Qualsiasi Cosa,<br>Istantaneamente',heroSub:'Testo, file e link — tutto in un posto.',tabText:'Testo',tabFile:'File',tabUrl:'Accorciatore',textTitle:'Condivisione Testo',textSub:'Condividi testo con un link.',textLabel:'Il Tuo Testo',textPlaceholder:'Scrivi o incolla qui…',fileTitle:'Condivisione File',fileSub:'Invia file velocemente.',uploadLabel:'Carica File',uploadHint:'<strong>Scegli un file</strong> o trascina',urlTitle:'Accorciatore URL',urlSub:'Trasforma link lunghi in corti.',urlLabel:'URL Lungo',urlPlaceholder:'https://esempio.it/link/molto/lungo…',generateBtn:'Genera Link',shortenBtn:'Accorcia URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Corto Pronto',copyBtn:'Copia',copiedBtn:'Copiato!',sharedTitle:'Qualcuno ha condiviso questo con te',badgeText:'Testo Condiviso',badgeFile:'File Condiviso',badgeUrl:'Link Corto',openLink:'Apri Link →',downloadBtn:'⬇ Scarica',footerText:'Condivisione sicura in qualsiasi lingua'},
+  ja:{heroTitle:'何でも共有しよう、<br>すぐに',heroSub:'テキスト・ファイル・リンクをワンストップで。',tabText:'テキスト',tabFile:'ファイル',tabUrl:'URL短縮',textTitle:'テキスト共有',textSub:'リンクでテキストをすぐに共有。',textLabel:'テキスト',textPlaceholder:'ここに入力または貼り付け…',fileTitle:'ファイル共有',fileSub:'ファイルを素早く送信。',uploadLabel:'ファイルをアップロード',uploadHint:'<strong>ファイルを選択</strong>またはドラッグ',urlTitle:'URL短縮',urlSub:'長いリンクをすっきり短く。',urlLabel:'長いURL',urlPlaceholder:'https://example.com/長い/リンク…',generateBtn:'共有リンクを生成',shortenBtn:'URLを短縮',readyLabel:'✓ リンク完成',shortReadyLabel:'✓ 短縮リンク完成',copyBtn:'コピー',copiedBtn:'コピーしました！',sharedTitle:'誰かがこれをあなたと共有しました',badgeText:'共有テキスト',badgeFile:'共有ファイル',badgeUrl:'短縮リンク',openLink:'リンクを開く →',downloadBtn:'⬇ ダウンロード',footerText:'どの言語でも安全に共有'},
+  zh:{heroTitle:'即刻分享一切',heroSub:'文字、文件和链接 — 一站搞定。',tabText:'文字',tabFile:'文件',tabUrl:'短链接',textTitle:'文字分享',textSub:'用链接即时分享文字。',textLabel:'你的文字',textPlaceholder:'在这里输入或粘贴…',fileTitle:'文件分享',fileSub:'快速发送文件。',uploadLabel:'上传文件',uploadHint:'<strong>选择文件</strong>或拖放',urlTitle:'短链接生成器',urlSub:'把长链接变成简短的。',urlLabel:'长链接',urlPlaceholder:'https://example.com/长/链接…',generateBtn:'生成分享链接',shortenBtn:'缩短链接',readyLabel:'✓ 链接已就绪',shortReadyLabel:'✓ 短链接已就绪',copyBtn:'复制',copiedBtn:'已复制！',sharedTitle:'有人与你分享了这个',badgeText:'共享文字',badgeFile:'共享文件',badgeUrl:'短链接',openLink:'打开链接 →',downloadBtn:'⬇ 下载',footerText:'安全分享，支持任意语言'},
+  ko:{heroTitle:'무엇이든 즉시<br>공유하세요',heroSub:'텍스트, 파일, 링크 — 한 곳에서.',tabText:'텍스트',tabFile:'파일',tabUrl:'URL 단축',textTitle:'텍스트 공유',textSub:'링크로 텍스트를 즉시 공유.',textLabel:'텍스트',textPlaceholder:'여기에 입력하거나 붙여넣기…',fileTitle:'파일 공유',fileSub:'파일을 빠르게 전송.',uploadLabel:'파일 업로드',uploadHint:'<strong>파일 선택</strong> 또는 드래그',urlTitle:'URL 단축기',urlSub:'긴 링크를 짧게 만들어요.',urlLabel:'긴 URL',urlPlaceholder:'https://example.com/긴/링크…',generateBtn:'공유 링크 생성',shortenBtn:'URL 단축',readyLabel:'✓ 링크 준비됨',shortReadyLabel:'✓ 단축 링크 준비됨',copyBtn:'복사',copiedBtn:'복사됨!',sharedTitle:'누군가 이것을 공유했습니다',badgeText:'공유된 텍스트',badgeFile:'공유된 파일',badgeUrl:'단축 링크',openLink:'링크 열기 →',downloadBtn:'⬇ 다운로드',footerText:'모든 언어의 안전한 공유'},
+  hi:{heroTitle:'कुछ भी शेयर करें,<br>तुरंत',heroSub:'टेक्स्ट, फ़ाइलें और लिंक — एक जगह।',tabText:'टेक्स्ट',tabFile:'फ़ाइल',tabUrl:'URL छोटा करें',textTitle:'टेक्स्ट शेयरिंग',textSub:'लिंक से टेक्स्ट तुरंत शेयर करें।',textLabel:'आपका टेक्स्ट',textPlaceholder:'यहाँ टाइप करें या पेस्ट करें…',fileTitle:'फ़ाइल शेयरिंग',fileSub:'फ़ाइलें जल्दी भेजें।',uploadLabel:'फ़ाइल अपलोड करें',uploadHint:'<strong>फ़ाइल चुनें</strong> या ड्रैग करें',urlTitle:'URL छोटा करें',urlSub:'लंबे लिंक को छोटा बनाएं।',urlLabel:'लंबा URL',urlPlaceholder:'https://example.com/लंबा/लिंक…',generateBtn:'शेयर लिंक बनाएं',shortenBtn:'URL छोटा करें',readyLabel:'✓ लिंक तैयार',shortReadyLabel:'✓ छोटा लिंक तैयार',copyBtn:'कॉपी',copiedBtn:'कॉपी हो गया!',sharedTitle:'किसी ने यह आपके साथ शेयर किया',badgeText:'शेयर्ड टेक्स्ट',badgeFile:'शेयर्ड फ़ाइल',badgeUrl:'छोटा लिंक',openLink:'लिंक खोलें →',downloadBtn:'⬇ डाउनलोड',footerText:'किसी भी भाषा में सुरक्षित शेयरिंग'},
+  ar:{heroTitle:'شارك أي شيء،<br>فورًا',heroSub:'نصوص وملفات وروابط — كل شيء في مكان واحد.',tabText:'نص',tabFile:'ملف',tabUrl:'اختصار الروابط',textTitle:'مشاركة النص',textSub:'شارك النص فورًا برابط.',textLabel:'نصك',textPlaceholder:'اكتب أو الصق هنا…',fileTitle:'مشاركة الملف',fileSub:'أرسل الملفات بسرعة.',uploadLabel:'رفع ملف',uploadHint:'<strong>اختر ملفًا</strong> أو اسحبه',urlTitle:'مختصر الروابط',urlSub:'حوّل الروابط الطويلة إلى قصيرة.',urlLabel:'رابط طويل',urlPlaceholder:'https://example.com/رابط/طويل…',generateBtn:'إنشاء رابط المشاركة',shortenBtn:'اختصار الرابط',readyLabel:'✓ الرابط جاهز',shortReadyLabel:'✓ الرابط المختصر جاهز',copyBtn:'نسخ',copiedBtn:'تم النسخ!',sharedTitle:'شخص ما شارك هذا معك',badgeText:'نص مشارك',badgeFile:'ملف مشارك',badgeUrl:'رابط مختصر',openLink:'فتح الرابط →',downloadBtn:'⬇ تنزيل',footerText:'مشاركة آمنة بأي لغة'},
+  ru:{heroTitle:'Поделитесь Чем Угодно,<br>Мгновенно',heroSub:'Тексты, файлы и ссылки — всё в одном месте.',tabText:'Текст',tabFile:'Файл',tabUrl:'Сократить URL',textTitle:'Поделиться Текстом',textSub:'Поделитесь текстом через ссылку.',textLabel:'Ваш Текст',textPlaceholder:'Введите или вставьте текст здесь…',fileTitle:'Поделиться Файлом',fileSub:'Отправляйте файлы быстро.',uploadLabel:'Загрузить Файл',uploadHint:'<strong>Выберите файл</strong> или перетащите',urlTitle:'Сократить URL',urlSub:'Превращайте длинные ссылки в короткие.',urlLabel:'Длинный URL',urlPlaceholder:'https://example.com/длинная/ссылка…',generateBtn:'Создать Ссылку',shortenBtn:'Сократить URL',readyLabel:'✓ Ссылка Готова',shortReadyLabel:'✓ Короткая Ссылка Готова',copyBtn:'Копировать',copiedBtn:'Скопировано!',sharedTitle:'Кто-то поделился этим с вами',badgeText:'Общий Текст',badgeFile:'Общий Файл',badgeUrl:'Короткая Ссылка',openLink:'Открыть Ссылку →',downloadBtn:'⬇ Скачать',footerText:'Безопасный обмен на любом языке'},
+  tr:{heroTitle:'Her Şeyi Anında<br>Paylaş',heroSub:'Metin, dosya ve bağlantı — hepsi bir arada.',tabText:'Metin',tabFile:'Dosya',tabUrl:'URL Kısaltıcı',textTitle:'Metin Paylaşma',textSub:'Bir bağlantıyla metni anında paylaş.',textLabel:'Metniniz',textPlaceholder:'Buraya yazın veya yapıştırın…',fileTitle:'Dosya Paylaşma',fileSub:'Dosyaları hızlıca gönderin.',uploadLabel:'Dosya Yükle',uploadHint:'<strong>Dosya seç</strong> veya sürükle',urlTitle:'URL Kısaltıcı',urlSub:'Uzun bağlantıları kısa yapın.',urlLabel:'Uzun URL',urlPlaceholder:'https://ornek.com/uzun/link…',generateBtn:'Paylaşım Linki Oluştur',shortenBtn:'URL\'yi Kısalt',readyLabel:'✓ Link Hazır',shortReadyLabel:'✓ Kısa Link Hazır',copyBtn:'Kopyala',copiedBtn:'Kopyalandı!',sharedTitle:'Biri bunu sizinle paylaştı',badgeText:'Paylaşılan Metin',badgeFile:'Paylaşılan Dosya',badgeUrl:'Kısa Link',openLink:'Linki Aç →',downloadBtn:'⬇ İndir',footerText:'Her dilde güvenli paylaşım'},
+  nl:{heroTitle:'Deel Alles,<br>Direct',heroSub:'Tekst, bestanden en links — alles op één plek.',tabText:'Tekst',tabFile:'Bestand',tabUrl:'URL Verkorten',textTitle:'Tekst Delen',textSub:'Deel tekst direct met een link.',textLabel:'Uw Tekst',textPlaceholder:'Typ of plak hier…',fileTitle:'Bestand Delen',fileSub:'Bestanden snel verzenden.',uploadLabel:'Bestand Uploaden',uploadHint:'<strong>Kies een bestand</strong> of sleep',urlTitle:'URL Verkorten',urlSub:'Maak lange links kort.',urlLabel:'Lange URL',urlPlaceholder:'https://voorbeeld.nl/lange/link…',generateBtn:'Deel Link Genereren',shortenBtn:'URL Verkorten',readyLabel:'✓ Link Klaar',shortReadyLabel:'✓ Korte Link Klaar',copyBtn:'Kopiëren',copiedBtn:'Gekopieerd!',sharedTitle:'Iemand heeft dit met u gedeeld',badgeText:'Gedeelde Tekst',badgeFile:'Gedeeld Bestand',badgeUrl:'Korte Link',openLink:'Link Openen →',downloadBtn:'⬇ Downloaden',footerText:'Veilig delen in elke taal'},
+  pl:{heroTitle:'Udostępnij Wszystko,<br>Natychmiast',heroSub:'Tekst, pliki i linki — wszystko w jednym.',tabText:'Tekst',tabFile:'Plik',tabUrl:'Skracanie URL',textTitle:'Udostępnianie Tekstu',textSub:'Udostępnij tekst natychmiast przez link.',textLabel:'Twój Tekst',textPlaceholder:'Wpisz lub wklej tutaj…',fileTitle:'Udostępnianie Pliku',fileSub:'Wysyłaj pliki błyskawicznie.',uploadLabel:'Prześlij Plik',uploadHint:'<strong>Wybierz plik</strong> lub przeciągnij',urlTitle:'Skracanie URL',urlSub:'Zamień długie linki w krótkie.',urlLabel:'Długi URL',urlPlaceholder:'https://przyklad.pl/długi/link…',generateBtn:'Generuj Link',shortenBtn:'Skróć URL',readyLabel:'✓ Link Gotowy',shortReadyLabel:'✓ Krótki Link Gotowy',copyBtn:'Kopiuj',copiedBtn:'Skopiowano!',sharedTitle:'Ktoś udostępnił to Tobie',badgeText:'Udostępniony Tekst',badgeFile:'Udostępniony Plik',badgeUrl:'Krótki Link',openLink:'Otwórz Link →',downloadBtn:'⬇ Pobierz',footerText:'Bezpieczne udostępnianie w każdym języku'},
+};
+
+let currentLang = detectLang();
+let currentMode = 'text';
+const links = {text:'',file:'',url:''};
+
+function detectLang() {
+  const code = (navigator.language||'en').split('-')[0].toLowerCase();
+  return T[code] ? code : 'en';
+}
+function t(k) { return (T[currentLang]||T.en)[k]||''; }
+
+function buildLangMenu() {
+  document.getElementById('langDropdown').innerHTML = languages.map(l=>`
+    <div class="lang-option ${l.code===currentLang?'active':''}" onclick="setLang('${l.code}')">
+      <span class="flag">${l.flag}</span><span>${l.name}</span><span class="native">${l.native}</span>
+    </div>`).join('');
+}
+function toggleLangMenu() {
+  document.getElementById('langBtn').classList.toggle('open');
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.lang-selector')) {
+    document.getElementById('langBtn').classList.remove('open');
+    document.getElementById('langDropdown').classList.remove('open');
+  }
+});
+function setLang(code) {
+  currentLang = code;
+  const l = languages.find(x=>x.code===code);
+  document.documentElement.lang = code;
+  document.documentElement.dir = l.dir;
+  document.getElementById('currentLangName').textContent = l.name;
+  applyTranslations();
+  buildLangMenu();
+  if (document.getElementById('langDropdown').classList.contains('open')) toggleLangMenu();
+}
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n'));
+    if (v) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = t(el.getAttribute('data-i18n-placeholder'));
+    if (v) el.placeholder = v;
+  });
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.tab').forEach(tb => tb.classList.toggle('active', tb.dataset.mode===mode));
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.toggle('active', p.id===`panel-${mode}`));
+  document.getElementById('mainCard').className = `card mode-${mode}`;
+}
+
+function onFileSelect(input) {
+  if (input.files[0]) {
+    document.getElementById('fileName').textContent = input.files[0].name;
+    document.getElementById('fileSelected').style.display = 'flex';
+  }
+}
+function clearFile() {
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileSelected').style.display = 'none';
+}
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e=>{e.preventDefault();zone.classList.add('dragover');});
+zone.addEventListener('dragleave', ()=>zone.classList.remove('dragover'));
+zone.addEventListener('drop', e=>{
+  e.preventDefault(); zone.classList.remove('dragover');
+  const f=e.dataTransfer.files;
+  if(f[0]){document.getElementById('fileInput').files=f;onFileSelect(document.getElementById('fileInput'));}
+});
+
+function doShare(mode) {
+  if (mode==='text') {
+    const txt = document.getElementById('textInput').value.trim();
+    if (!txt) return shake('panel-text');
+    saveAndShow(mode,{type:'text',text:txt,lang:currentLang});
+  } else if (mode==='file') {
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) return shake('panel-file');
+    const reader = new FileReader();
+    reader.onload = ()=>saveAndShow(mode,{type:'file',file:reader.result,fileName:file.name,lang:currentLang});
+    reader.readAsDataURL(file);
+  } else if (mode==='url') {
+    let url = document.getElementById('urlInput').value.trim();
+    if (!url) return shake('panel-url');
+    if (!/^https?:\/\//i.test(url)) url='https://'+url;
+    saveAndShow(mode,{type:'url',url,lang:currentLang});
+  }
+}
+function saveAndShow(mode,data) {
+  const id = Math.random().toString(36).substring(2,10);
+  localStorage.setItem('ts_'+id, JSON.stringify(data));
+  const link = window.location.href.split('?')[0]+'?s='+id;
+  links[mode] = link;
+  document.getElementById(`linkText-${mode}`).textContent = link;
+  document.getElementById(`result-${mode}`).classList.add('show');
+  const cb = document.getElementById(`copyBtn-${mode}`);
+  cb.classList.remove('copied'); cb.textContent = t('copyBtn');
+}
+function copyLink(mode) {
+  navigator.clipboard.writeText(links[mode]).then(()=>{
+    const cb = document.getElementById(`copyBtn-${mode}`);
+    cb.textContent = t('copiedBtn'); cb.classList.add('copied');
+    setTimeout(()=>{cb.textContent=t('copyBtn');cb.classList.remove('copied');},2000);
+  });
+}
+function shake(panelId) {
+  const el = document.getElementById(panelId);
+  el.style.animation='none'; el.offsetHeight; el.style.animation='shake 0.4s ease';
+  setTimeout(()=>el.style.animation='',400);
+}
+
+function loadShared() {
+  const p = new URLSearchParams(window.location.search);
+  const id = p.get('s') || p.get('share');
+  if (!id) return;
+  const raw = localStorage.getItem('ts_'+id) || localStorage.getItem(id);
+  if (!raw) return;
+  const data = JSON.parse(raw);
+  if (data.lang && T[data.lang]) {
+    currentLang = data.lang;
+    const l = languages.find(x=>x.code===data.lang);
+    document.documentElement.dir = l.dir;
+  }
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('mainSection').style.display  = 'none';
+  document.getElementById('view-page').style.display    = 'block';
+
+  const card  = document.getElementById('viewCard');
+  const badge = document.getElementById('viewBadge');
+  const cont  = document.getElementById('viewContent');
+
+  if (data.type==='text'||data.message) {
+    card.className='view-card type-text';
+    badge.textContent='✍️ '+t('badgeText');
+    const div=document.createElement('div'); div.className='text-content';
+    div.textContent=data.text||data.message; cont.appendChild(div);
+  } else if (data.type==='file'||data.file) {
+    card.className='view-card type-file';
+    badge.textContent='📎 '+t('badgeFile');
+    const a=document.createElement('a'); a.href=data.file; a.download=data.fileName;
+    a.className='dl-btn'; a.innerHTML=`${t('downloadBtn')} <em>${data.fileName}</em>`;
+    cont.appendChild(a);
+  } else if (data.type==='url') {
+    card.className='view-card type-url';
+    badge.textContent='🔗 '+t('badgeUrl');
+    const a=document.createElement('a'); a.href=data.url; a.target='_blank'; a.rel='noopener noreferrer';
+    a.className='url-redirect'; a.textContent=t('openLink'); cont.appendChild(a);
+    const p2=document.createElement('p'); p2.className='url-original'; p2.textContent=data.url; cont.appendChild(p2);
+  }
+  document.getElementById('viewTitle').textContent = t('sharedTitle');
+  applyTranslations();
+}
+
+buildLangMenu();
+applyTranslations();
+loadShared();
+
+</script>
+</body>
+</html>
