@@ -1,3 +1,73 @@
+
+
+<!DOCTYPE html> <html lang="en" dir="ltr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Tellas Share</title> <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="styles
+
+pasted
+
+I want the link to expire for 1 or 2 hours, in case no one else tries to steal our importation. I want the link to expire in 1 or 2 hours to prevent others from accessing our importation. from spams
+
+18:05
+
+Architected link expiration system with timer functionality
+Architected link expiration system with timer functionality
+I'll add link expiration (1 or 2 hour options) with a countdown timer, expiry check on load, and a clear expired message. Let me update the file now.
+
+
+Architected expiration feature with UI components and countdown timer
+Architected expiration feature with UI components and countdown timer
+I have the full file content from the document. I'll create the modified version with expiration support:
+
+
+Created a file, ran a command, read a file
+Created a file, ran a command, read a file
+
+Creating modified TellasShare with 1h/2h link expiration
+tellas-share-expiry.html
+
+Copy to outputs
+
+Script
+
+Presented file
+Done
+Here's what was added to protect your shares:
+
+⏱️ Expiry picker — Before generating a link, you now choose 1 Hour or 2 Hours. This works across all three modes (Text, File, URL Shortener).
+
+🔒 Expiry timestamp stored — When a link is created, an expiresAt timestamp is embedded in the data. Anyone who gets the link after it expires simply cannot access the content.
+
+⏳ Live countdown timer — When someone opens a shared link, a real-time countdown (e.g. 0:47:23) is shown at the top of the card so both parties can see exactly how much time is left.
+
+🚫 Expired screen — Once the time is up, the page automatically flips to a locked "Link Expired" state — no content is shown, and the countdown disappears. This works both on page load and while someone is actively viewing the link.
+
+All expiry text is also fully translated across all 15 supported languages.
+
+Tellasshare
+Code · HTML 
+plz do not show Link Expires In
+
+18:22
+
+Devised strategy to conceal expiry picker while preserving functionality
+Devised strategy to conceal expiry picker while preserving functionality
+Done! The "Link Expires In" picker is completely hidden from the UI. Links still silently expire after 1 hour in the background — the countdown timer still appears for recipients, and the expired screen still shows when time is up. It's all invisible to the sender now.
+
+Tellasshare
+Code · HTML 
+
+
+Next time, try this in Cowork
+
+Hand off complex tasks for Claude to handle independently. Come back to finished results.
+
+
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+Tellasshare · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -6,7 +76,7 @@
 <title>Tellas Share</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet">
 <style>
-
+ 
 :root {
   --bg: #fff8f0;
   --surface: #ffffff;
@@ -24,9 +94,9 @@
   --font-body: 'Nunito', sans-serif;
   --font-display: 'Righteous', cursive;
 }
-
+ 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
 body {
   background: var(--bg);
   color: var(--text);
@@ -38,7 +108,7 @@ body {
   position: relative;
   overflow-x: hidden;
 }
-
+ 
 body::before {
   content: '';
   position: fixed; top: -120px; left: -80px;
@@ -71,7 +141,7 @@ body::after {
   pointer-events: none; z-index: 0; border-radius: 50%;
   animation: blob1 9s ease-in-out infinite alternate;
 }
-
+ 
 /* Header */
 header {
   width: 100%; max-width: 880px;
@@ -85,7 +155,7 @@ header {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   letter-spacing: 0.5px;
 }
-
+ 
 /* Lang selector */
 .lang-selector { position: relative; }
 .lang-btn {
@@ -118,7 +188,7 @@ header {
 .lang-option.active { background: rgba(255,77,141,0.1); color: var(--pink); }
 .lang-option .flag { font-size: 18px; line-height: 1; }
 .lang-option .native { color: var(--muted); font-size: 11px; font-weight: 400; }
-
+ 
 /* Hero */
 .hero {
   width: 100%; max-width: 560px;
@@ -133,7 +203,7 @@ header {
   margin-bottom: 10px;
 }
 .hero p { color: var(--muted); font-size: 15px; font-weight: 600; margin-bottom: 28px; }
-
+ 
 /* Tabs */
 .tabs {
   display: flex; gap: 6px;
@@ -154,7 +224,7 @@ header {
 .tab[data-mode="file"].active { background: linear-gradient(135deg,var(--blue),var(--purple)); box-shadow: 0 4px 16px rgba(59,139,255,0.35); }
 .tab[data-mode="url"].active  { background: linear-gradient(135deg,var(--green),#16b974);     box-shadow: 0 4px 16px rgba(34,217,138,0.35); }
 .tab-icon { font-size: 16px; }
-
+ 
 /* Card */
 main { width: 100%; max-width: 500px; padding: 24px 24px 100px; position: relative; z-index: 5; }
 .card {
@@ -169,24 +239,24 @@ main { width: 100%; max-width: 500px; padding: 24px 24px 100px; position: relati
 .card.mode-text::before { background: linear-gradient(90deg,var(--pink),var(--orange),var(--yellow)); }
 .card.mode-file::before { background: linear-gradient(90deg,var(--blue),var(--purple),var(--pink)); }
 .card.mode-url::before  { background: linear-gradient(90deg,var(--green),var(--blue),var(--purple)); }
-
+ 
 .mode-panel { display: none; animation: panelIn 0.25s ease; }
 .mode-panel.active { display: block; }
 @keyframes panelIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
-
+ 
 .panel-title { font-family: var(--font-display); font-size: 22px; font-weight:400; margin-bottom:4px; }
 .mode-text .panel-title { background:linear-gradient(135deg,var(--pink),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .mode-file .panel-title { background:linear-gradient(135deg,var(--blue),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .mode-url  .panel-title { background:linear-gradient(135deg,var(--green),#16b974);      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .panel-sub { color:var(--muted); font-size:13px; font-weight:600; margin-bottom:22px; }
-
+ 
 /* Fields */
 .field { margin-bottom: 18px; }
 .field label { display:block; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:7px; }
 .mode-text .field label { color: var(--pink); }
 .mode-file .field label { color: var(--blue); }
 .mode-url  .field label { color: var(--green); }
-
+ 
 textarea, .url-input {
   width:100%; padding:14px 16px;
   background:var(--surface2); border:2px solid transparent;
@@ -198,7 +268,7 @@ textarea { resize:none; height:130px; }
 textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight:600; }
 .mode-text textarea:focus { border-color: rgba(255,77,141,0.35); }
 .mode-url .url-input:focus { border-color: rgba(34,217,138,0.4); }
-
+ 
 /* Upload */
 .upload-zone {
   border: 2.5px dashed rgba(59,139,255,0.3); border-radius:var(--radius);
@@ -223,7 +293,49 @@ textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight
 .file-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--blue); }
 .file-clear { cursor:pointer; color:var(--muted); font-size:16px; font-weight:900; transition:color 0.2s; }
 .file-clear:hover { color:var(--pink); }
-
+ 
+/* ─── Expiry Picker ─── */
+.expiry-picker {
+  margin-bottom: 18px;
+}
+.expiry-picker .expiry-label {
+  display: block;
+  font-size: 11px; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.mode-text .expiry-label { color: var(--pink); }
+.mode-file .expiry-label { color: var(--blue); }
+.mode-url  .expiry-label { color: var(--green); }
+ 
+.expiry-options {
+  display: flex; gap: 8px;
+}
+.expiry-opt {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 12px; border-radius: 12px; cursor: pointer;
+  font-size: 13px; font-weight: 800;
+  border: 2px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+.expiry-opt:hover { border-color: var(--muted); color: var(--text); }
+.expiry-opt .opt-icon { font-size: 15px; }
+ 
+.mode-text .expiry-opt.selected { background: rgba(255,77,141,0.10); border-color: rgba(255,77,141,0.5); color: var(--pink); }
+.mode-file .expiry-opt.selected { background: rgba(59,139,255,0.10);  border-color: rgba(59,139,255,0.5);  color: var(--blue); }
+.mode-url  .expiry-opt.selected { background: rgba(34,217,138,0.10);  border-color: rgba(34,217,138,0.5);  color: var(--green); }
+ 
+/* Expiry badge shown in result box */
+.expiry-info {
+  margin-top: 10px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.expiry-info .exp-icon { font-size: 14px; }
+ 
 /* Buttons */
 .btn-primary {
   width:100%; padding:15px; border:none; border-radius:var(--radius);
@@ -241,7 +353,7 @@ textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight
 .mode-file .btn-primary:hover { box-shadow:0 10px 32px rgba(59,139,255,0.45); }
 .mode-url  .btn-primary { background:linear-gradient(135deg,var(--green),#16b974,var(--blue)); box-shadow:0 6px 24px rgba(34,217,138,0.35); }
 .mode-url  .btn-primary:hover { box-shadow:0 10px 32px rgba(34,217,138,0.45); }
-
+ 
 /* Result box */
 .result-box { display:none; margin-top:18px; border-radius:var(--radius); padding:14px 16px; animation:fadeUp 0.3s ease; }
 .result-box.show { display:block; }
@@ -265,7 +377,7 @@ textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight
 .mode-file .copy-btn { background:linear-gradient(135deg,var(--blue),var(--purple)); box-shadow:0 4px 14px rgba(59,139,255,0.3); }
 .mode-url  .copy-btn { background:linear-gradient(135deg,var(--green),#16b974);     box-shadow:0 4px 14px rgba(34,217,138,0.3); }
 .copy-btn.copied { background:linear-gradient(135deg,#22d98a,#16b974) !important; box-shadow:0 4px 14px rgba(34,217,138,0.35) !important; }
-
+ 
 /* View page */
 #view-page { display:none; width:100%; max-width:520px; padding:40px 24px 100px; position:relative; z-index:5; }
 .view-card {
@@ -277,12 +389,14 @@ textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight
 .view-card.type-text::before  { background:linear-gradient(90deg,var(--pink),var(--orange),var(--yellow)); }
 .view-card.type-file::before  { background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink)); }
 .view-card.type-url::before   { background:linear-gradient(90deg,var(--green),var(--blue),var(--purple)); }
-
+.view-card.type-expired::before { background:linear-gradient(90deg,#aaa,#ccc); }
+ 
 .view-badge { display:inline-flex; align-items:center; gap:6px; border-radius:40px; padding:5px 14px; font-size:11.5px; font-weight:800; margin-bottom:16px; }
-.type-text .view-badge { background:rgba(255,77,141,0.1); border:1.5px solid rgba(255,77,141,0.25); color:var(--pink); }
-.type-file .view-badge { background:rgba(59,139,255,0.1); border:1.5px solid rgba(59,139,255,0.25); color:var(--blue); }
-.type-url  .view-badge { background:rgba(34,217,138,0.1); border:1.5px solid rgba(34,217,138,0.25); color:var(--green); }
-
+.type-text .view-badge    { background:rgba(255,77,141,0.1); border:1.5px solid rgba(255,77,141,0.25); color:var(--pink); }
+.type-file .view-badge    { background:rgba(59,139,255,0.1); border:1.5px solid rgba(59,139,255,0.25); color:var(--blue); }
+.type-url  .view-badge    { background:rgba(34,217,138,0.1); border:1.5px solid rgba(34,217,138,0.25); color:var(--green); }
+.type-expired .view-badge { background:rgba(0,0,0,0.06);    border:1.5px solid rgba(0,0,0,0.12);      color:var(--muted); }
+ 
 .view-card h2 { font-family:var(--font-display); font-size:21px; font-weight:400; margin-bottom:20px; }
 .text-content {
   background:var(--surface2); border-left:4px solid var(--pink);
@@ -311,11 +425,31 @@ textarea::placeholder, .url-input::placeholder { color:var(--muted); font-weight
 }
 .url-redirect:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(34,217,138,0.4); }
 .url-original { margin-top:12px; font-size:12px; color:var(--muted); font-weight:600; word-break:break-all; }
-
+ 
+/* Countdown timer on view page */
+.countdown-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px;
+  padding: 9px 14px; border-radius: 10px;
+  font-size: 12.5px; font-weight: 800;
+}
+.type-text .countdown-bar  { background:rgba(255,77,141,0.08); color:var(--pink); }
+.type-file .countdown-bar  { background:rgba(59,139,255,0.08);  color:var(--blue); }
+.type-url  .countdown-bar  { background:rgba(34,217,138,0.08);  color:var(--green); }
+.countdown-bar .cd-icon { font-size: 15px; }
+.countdown-bar .cd-label { flex: 1; }
+.countdown-bar .cd-time { font-family: var(--font-display); font-size: 14px; letter-spacing: 1px; }
+ 
+/* Expired state */
+.expired-body { text-align: center; padding: 10px 0 4px; }
+.expired-icon { font-size: 48px; margin-bottom: 12px; display: block; opacity: 0.5; }
+.expired-msg { font-size: 14px; color: var(--muted); font-weight: 700; line-height: 1.6; }
+.expired-msg strong { color: var(--text); font-weight: 900; }
+ 
 /* RTL */
 [dir="rtl"] .text-content { border-left:none; border-right:4px solid var(--pink); border-radius:12px 0 0 12px; }
 [dir="rtl"] .file-selected { flex-direction:row-reverse; }
-
+ 
 /* Footer */
 footer {
   position:fixed; bottom:0; left:0; right:0;
@@ -323,16 +457,16 @@ footer {
   font-size:12px; font-weight:700; color:var(--muted);
   background:linear-gradient(transparent,var(--bg)); z-index:5;
 }
-
+ 
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-
+ 
 </style>
 </head>
 <body>
-
+ 
 <div class="blob-green"></div>
 <div class="blob-yellow"></div>
-
+ 
 <header>
   <div class="wordmark">TellasShare</div>
   <div class="lang-selector">
@@ -344,7 +478,7 @@ footer {
     <div class="lang-dropdown" id="langDropdown"></div>
   </div>
 </header>
-
+ 
 <div class="hero" id="heroSection">
   <h1 data-i18n="heroTitle">Share Anything,<br>Instantly</h1>
   <p data-i18n="heroSub">Text, files, and links — all in one place.</p>
@@ -360,10 +494,10 @@ footer {
     </button>
   </div>
 </div>
-
+ 
 <main id="mainSection">
   <div class="card mode-text" id="mainCard">
-
+ 
     <!-- TEXT -->
     <div class="mode-panel active" id="panel-text">
       <div class="panel-title" data-i18n="textTitle">Text Sharing</div>
@@ -379,9 +513,13 @@ footer {
           <span class="link-text" id="linkText-text"></span>
           <button class="copy-btn" id="copyBtn-text" onclick="copyLink('text')" data-i18n="copyBtn">Copy</button>
         </div>
+        <div class="expiry-info">
+          <span class="exp-icon">🔒</span>
+          <span id="expiryInfo-text"></span>
+        </div>
       </div>
     </div>
-
+ 
     <!-- FILE -->
     <div class="mode-panel" id="panel-file">
       <div class="panel-title" data-i18n="fileTitle">File Sharing</div>
@@ -406,9 +544,13 @@ footer {
           <span class="link-text" id="linkText-file"></span>
           <button class="copy-btn" id="copyBtn-file" onclick="copyLink('file')" data-i18n="copyBtn">Copy</button>
         </div>
+        <div class="expiry-info">
+          <span class="exp-icon">🔒</span>
+          <span id="expiryInfo-file"></span>
+        </div>
       </div>
     </div>
-
+ 
     <!-- URL -->
     <div class="mode-panel" id="panel-url">
       <div class="panel-title" data-i18n="urlTitle">URL Shortener</div>
@@ -424,25 +566,34 @@ footer {
           <span class="link-text" id="linkText-url"></span>
           <button class="copy-btn" id="copyBtn-url" onclick="copyLink('url')" data-i18n="copyBtn">Copy</button>
         </div>
+        <div class="expiry-info">
+          <span class="exp-icon">🔒</span>
+          <span id="expiryInfo-url"></span>
+        </div>
       </div>
     </div>
-
+ 
   </div>
 </main>
-
+ 
 <!-- Shared view -->
 <div id="view-page">
   <div class="view-card" id="viewCard">
     <div class="view-badge" id="viewBadge">✦ Shared</div>
+    <div id="countdownBar" class="countdown-bar" style="display:none;">
+      <span class="cd-icon">⏱️</span>
+      <span class="cd-label" data-i18n="expiresIn">Expires in</span>
+      <span class="cd-time" id="cdTime">—</span>
+    </div>
     <h2 id="viewTitle" data-i18n="sharedTitle">Someone shared this with you</h2>
     <div id="viewContent"></div>
   </div>
 </div>
-
+ 
 <footer>TellasShare · <span data-i18n="footerText">Secure sharing, any language</span></footer>
-
+ 
 <script>
-
+ 
 const languages = [
   {code:'en',name:'English',   native:'English',   flag:'🇬🇧',dir:'ltr'},
   {code:'es',name:'Spanish',   native:'Español',   flag:'🇪🇸',dir:'ltr'},
@@ -460,35 +611,65 @@ const languages = [
   {code:'nl',name:'Dutch',     native:'Nederlands',flag:'🇳🇱',dir:'ltr'},
   {code:'pl',name:'Polish',    native:'Polski',    flag:'🇵🇱',dir:'ltr'},
 ];
-
+ 
 const T = {
-  en:{heroTitle:'Share Anything,<br>Instantly',heroSub:'Text, files, and links — all in one place.',tabText:'Text',tabFile:'File',tabUrl:'URL Shortener',textTitle:'Text Sharing',textSub:'Share text instantly with a link.',textLabel:'Your Text',textPlaceholder:'Type or paste anything here…',fileTitle:'File Sharing',fileSub:'Send files fast.',uploadLabel:'Upload File',uploadHint:'<strong>Choose a file</strong> or drag and drop',urlTitle:'URL Shortener',urlSub:'Turn long links into clean, short ones.',urlLabel:'Long URL',urlPlaceholder:'https://example.com/very/long/link…',generateBtn:'Generate Share Link',shortenBtn:'Shorten URL',readyLabel:'✓ Link Ready',shortReadyLabel:'✓ Short Link Ready',copyBtn:'Copy',copiedBtn:'Copied!',sharedTitle:'Someone shared this with you',badgeText:'Shared Text',badgeFile:'Shared File',badgeUrl:'Short Link',openLink:'Open Link →',downloadBtn:'⬇ Download',footerText:'Secure sharing, any language'},
-  es:{heroTitle:'Comparte Cualquier Cosa,<br>Al Instante',heroSub:'Texto, archivos y enlaces — todo en un lugar.',tabText:'Texto',tabFile:'Archivo',tabUrl:'Acortador',textTitle:'Compartir Texto',textSub:'Comparte texto al instante con un enlace.',textLabel:'Tu Texto',textPlaceholder:'Escribe o pega aquí…',fileTitle:'Compartir Archivo',fileSub:'Envía archivos rápido.',uploadLabel:'Subir Archivo',uploadHint:'<strong>Elige un archivo</strong> o arrastra',urlTitle:'Acortador de URL',urlSub:'Convierte enlaces largos en cortos.',urlLabel:'URL Larga',urlPlaceholder:'https://ejemplo.com/enlace/muy/largo…',generateBtn:'Generar Enlace',shortenBtn:'Acortar URL',readyLabel:'✓ Enlace Listo',shortReadyLabel:'✓ Enlace Corto Listo',copyBtn:'Copiar',copiedBtn:'¡Copiado!',sharedTitle:'Alguien compartió esto contigo',badgeText:'Texto Compartido',badgeFile:'Archivo Compartido',badgeUrl:'Enlace Corto',openLink:'Abrir Enlace →',downloadBtn:'⬇ Descargar',footerText:'Compartir seguro, en cualquier idioma'},
-  fr:{heroTitle:'Partagez N\'importe Quoi,<br>Instantanément',heroSub:'Textes, fichiers et liens — tout en un.',tabText:'Texte',tabFile:'Fichier',tabUrl:'Raccourcisseur',textTitle:'Partage de Texte',textSub:'Partagez du texte avec un lien.',textLabel:'Votre Texte',textPlaceholder:'Écrivez ou collez ici…',fileTitle:'Partage de Fichier',fileSub:'Envoyez des fichiers rapidement.',uploadLabel:'Téléverser',uploadHint:'<strong>Choisissez un fichier</strong> ou glissez',urlTitle:'Raccourcisseur d\'URL',urlSub:'Transformez les longs liens en courts.',urlLabel:'URL Longue',urlPlaceholder:'https://exemple.com/lien/tres/long…',generateBtn:'Générer un Lien',shortenBtn:'Raccourcir l\'URL',readyLabel:'✓ Lien Prêt',shortReadyLabel:'✓ Lien Court Prêt',copyBtn:'Copier',copiedBtn:'Copié !',sharedTitle:'Quelqu\'un a partagé ceci avec vous',badgeText:'Texte Partagé',badgeFile:'Fichier Partagé',badgeUrl:'Lien Court',openLink:'Ouvrir le Lien →',downloadBtn:'⬇ Télécharger',footerText:'Partage sécurisé, dans toutes les langues'},
-  de:{heroTitle:'Alles Teilen,<br>Sofort',heroSub:'Texte, Dateien und Links — alles an einem Ort.',tabText:'Text',tabFile:'Datei',tabUrl:'URL-Kürzer',textTitle:'Text Teilen',textSub:'Text sofort mit einem Link teilen.',textLabel:'Ihr Text',textPlaceholder:'Hier eingeben oder einfügen…',fileTitle:'Datei Teilen',fileSub:'Dateien schnell senden.',uploadLabel:'Datei Hochladen',uploadHint:'<strong>Datei auswählen</strong> oder ziehen',urlTitle:'URL-Kürzer',urlSub:'Lange Links in kurze umwandeln.',urlLabel:'Langer Link',urlPlaceholder:'https://beispiel.de/sehr/langer/link…',generateBtn:'Link Erstellen',shortenBtn:'URL Kürzen',readyLabel:'✓ Link Bereit',shortReadyLabel:'✓ Kurzer Link Bereit',copyBtn:'Kopieren',copiedBtn:'Kopiert!',sharedTitle:'Jemand hat dies mit Ihnen geteilt',badgeText:'Geteilter Text',badgeFile:'Geteilte Datei',badgeUrl:'Kurzer Link',openLink:'Link Öffnen →',downloadBtn:'⬇ Herunterladen',footerText:'Sicheres Teilen in jeder Sprache'},
-  pt:{heroTitle:'Compartilhe Qualquer Coisa,<br>Instantaneamente',heroSub:'Textos, arquivos e links — tudo em um lugar.',tabText:'Texto',tabFile:'Arquivo',tabUrl:'Encurtador',textTitle:'Compartilhar Texto',textSub:'Compartilhe texto com um link.',textLabel:'Seu Texto',textPlaceholder:'Digite ou cole aqui…',fileTitle:'Compartilhar Arquivo',fileSub:'Envie arquivos rapidamente.',uploadLabel:'Enviar Arquivo',uploadHint:'<strong>Escolha um arquivo</strong> ou arraste',urlTitle:'Encurtador de URL',urlSub:'Transforme links longos em curtos.',urlLabel:'URL Longa',urlPlaceholder:'https://exemplo.com/link/muito/longo…',generateBtn:'Gerar Link',shortenBtn:'Encurtar URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Curto Pronto',copyBtn:'Copiar',copiedBtn:'Copiado!',sharedTitle:'Alguém compartilhou isso com você',badgeText:'Texto Compartilhado',badgeFile:'Arquivo Compartilhado',badgeUrl:'Link Curto',openLink:'Abrir Link →',downloadBtn:'⬇ Baixar',footerText:'Compartilhamento seguro, em qualquer idioma'},
-  it:{heroTitle:'Condividi Qualsiasi Cosa,<br>Istantaneamente',heroSub:'Testo, file e link — tutto in un posto.',tabText:'Testo',tabFile:'File',tabUrl:'Accorciatore',textTitle:'Condivisione Testo',textSub:'Condividi testo con un link.',textLabel:'Il Tuo Testo',textPlaceholder:'Scrivi o incolla qui…',fileTitle:'Condivisione File',fileSub:'Invia file velocemente.',uploadLabel:'Carica File',uploadHint:'<strong>Scegli un file</strong> o trascina',urlTitle:'Accorciatore URL',urlSub:'Trasforma link lunghi in corti.',urlLabel:'URL Lungo',urlPlaceholder:'https://esempio.it/link/molto/lungo…',generateBtn:'Genera Link',shortenBtn:'Accorcia URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Corto Pronto',copyBtn:'Copia',copiedBtn:'Copiato!',sharedTitle:'Qualcuno ha condiviso questo con te',badgeText:'Testo Condiviso',badgeFile:'File Condiviso',badgeUrl:'Link Corto',openLink:'Apri Link →',downloadBtn:'⬇ Scarica',footerText:'Condivisione sicura in qualsiasi lingua'},
-  ja:{heroTitle:'何でも共有しよう、<br>すぐに',heroSub:'テキスト・ファイル・リンクをワンストップで。',tabText:'テキスト',tabFile:'ファイル',tabUrl:'URL短縮',textTitle:'テキスト共有',textSub:'リンクでテキストをすぐに共有。',textLabel:'テキスト',textPlaceholder:'ここに入力または貼り付け…',fileTitle:'ファイル共有',fileSub:'ファイルを素早く送信。',uploadLabel:'ファイルをアップロード',uploadHint:'<strong>ファイルを選択</strong>またはドラッグ',urlTitle:'URL短縮',urlSub:'長いリンクをすっきり短く。',urlLabel:'長いURL',urlPlaceholder:'https://example.com/長い/リンク…',generateBtn:'共有リンクを生成',shortenBtn:'URLを短縮',readyLabel:'✓ リンク完成',shortReadyLabel:'✓ 短縮リンク完成',copyBtn:'コピー',copiedBtn:'コピーしました！',sharedTitle:'誰かがこれをあなたと共有しました',badgeText:'共有テキスト',badgeFile:'共有ファイル',badgeUrl:'短縮リンク',openLink:'リンクを開く →',downloadBtn:'⬇ ダウンロード',footerText:'どの言語でも安全に共有'},
-  zh:{heroTitle:'即刻分享一切',heroSub:'文字、文件和链接 — 一站搞定。',tabText:'文字',tabFile:'文件',tabUrl:'短链接',textTitle:'文字分享',textSub:'用链接即时分享文字。',textLabel:'你的文字',textPlaceholder:'在这里输入或粘贴…',fileTitle:'文件分享',fileSub:'快速发送文件。',uploadLabel:'上传文件',uploadHint:'<strong>选择文件</strong>或拖放',urlTitle:'短链接生成器',urlSub:'把长链接变成简短的。',urlLabel:'长链接',urlPlaceholder:'https://example.com/长/链接…',generateBtn:'生成分享链接',shortenBtn:'缩短链接',readyLabel:'✓ 链接已就绪',shortReadyLabel:'✓ 短链接已就绪',copyBtn:'复制',copiedBtn:'已复制！',sharedTitle:'有人与你分享了这个',badgeText:'共享文字',badgeFile:'共享文件',badgeUrl:'短链接',openLink:'打开链接 →',downloadBtn:'⬇ 下载',footerText:'安全分享，支持任意语言'},
-  ko:{heroTitle:'무엇이든 즉시<br>공유하세요',heroSub:'텍스트, 파일, 링크 — 한 곳에서.',tabText:'텍스트',tabFile:'파일',tabUrl:'URL 단축',textTitle:'텍스트 공유',textSub:'링크로 텍스트를 즉시 공유.',textLabel:'텍스트',textPlaceholder:'여기에 입력하거나 붙여넣기…',fileTitle:'파일 공유',fileSub:'파일을 빠르게 전송.',uploadLabel:'파일 업로드',uploadHint:'<strong>파일 선택</strong> 또는 드래그',urlTitle:'URL 단축기',urlSub:'긴 링크를 짧게 만들어요.',urlLabel:'긴 URL',urlPlaceholder:'https://example.com/긴/링크…',generateBtn:'공유 링크 생성',shortenBtn:'URL 단축',readyLabel:'✓ 링크 준비됨',shortReadyLabel:'✓ 단축 링크 준비됨',copyBtn:'복사',copiedBtn:'복사됨!',sharedTitle:'누군가 이것을 공유했습니다',badgeText:'공유된 텍스트',badgeFile:'공유된 파일',badgeUrl:'단축 링크',openLink:'링크 열기 →',downloadBtn:'⬇ 다운로드',footerText:'모든 언어의 안전한 공유'},
-  hi:{heroTitle:'कुछ भी शेयर करें,<br>तुरंत',heroSub:'टेक्स्ट, फ़ाइलें और लिंक — एक जगह।',tabText:'टेक्स्ट',tabFile:'फ़ाइल',tabUrl:'URL छोटा करें',textTitle:'टेक्स्ट शेयरिंग',textSub:'लिंक से टेक्स्ट तुरंत शेयर करें।',textLabel:'आपका टेक्स्ट',textPlaceholder:'यहाँ टाइप करें या पेस्ट करें…',fileTitle:'फ़ाइल शेयरिंग',fileSub:'फ़ाइलें जल्दी भेजें।',uploadLabel:'फ़ाइल अपलोड करें',uploadHint:'<strong>फ़ाइल चुनें</strong> या ड्रैग करें',urlTitle:'URL छोटा करें',urlSub:'लंबे लिंक को छोटा बनाएं।',urlLabel:'लंबा URL',urlPlaceholder:'https://example.com/लंबा/लिंक…',generateBtn:'शेयर लिंक बनाएं',shortenBtn:'URL छोटा करें',readyLabel:'✓ लिंक तैयार',shortReadyLabel:'✓ छोटा लिंक तैयार',copyBtn:'कॉपी',copiedBtn:'कॉपी हो गया!',sharedTitle:'किसी ने यह आपके साथ शेयर किया',badgeText:'शेयर्ड टेक्स्ट',badgeFile:'शेयर्ड फ़ाइल',badgeUrl:'छोटा लिंक',openLink:'लिंक खोलें →',downloadBtn:'⬇ डाउनलोड',footerText:'किसी भी भाषा में सुरक्षित शेयरिंग'},
-  ar:{heroTitle:'شارك أي شيء،<br>فورًا',heroSub:'نصوص وملفات وروابط — كل شيء في مكان واحد.',tabText:'نص',tabFile:'ملف',tabUrl:'اختصار الروابط',textTitle:'مشاركة النص',textSub:'شارك النص فورًا برابط.',textLabel:'نصك',textPlaceholder:'اكتب أو الصق هنا…',fileTitle:'مشاركة الملف',fileSub:'أرسل الملفات بسرعة.',uploadLabel:'رفع ملف',uploadHint:'<strong>اختر ملفًا</strong> أو اسحبه',urlTitle:'مختصر الروابط',urlSub:'حوّل الروابط الطويلة إلى قصيرة.',urlLabel:'رابط طويل',urlPlaceholder:'https://example.com/رابط/طويل…',generateBtn:'إنشاء رابط المشاركة',shortenBtn:'اختصار الرابط',readyLabel:'✓ الرابط جاهز',shortReadyLabel:'✓ الرابط المختصر جاهز',copyBtn:'نسخ',copiedBtn:'تم النسخ!',sharedTitle:'شخص ما شارك هذا معك',badgeText:'نص مشارك',badgeFile:'ملف مشارك',badgeUrl:'رابط مختصر',openLink:'فتح الرابط →',downloadBtn:'⬇ تنزيل',footerText:'مشاركة آمنة بأي لغة'},
-  ru:{heroTitle:'Поделитесь Чем Угодно,<br>Мгновенно',heroSub:'Тексты, файлы и ссылки — всё в одном месте.',tabText:'Текст',tabFile:'Файл',tabUrl:'Сократить URL',textTitle:'Поделиться Текстом',textSub:'Поделитесь текстом через ссылку.',textLabel:'Ваш Текст',textPlaceholder:'Введите или вставьте текст здесь…',fileTitle:'Поделиться Файлом',fileSub:'Отправляйте файлы быстро.',uploadLabel:'Загрузить Файл',uploadHint:'<strong>Выберите файл</strong> или перетащите',urlTitle:'Сократить URL',urlSub:'Превращайте длинные ссылки в короткие.',urlLabel:'Длинный URL',urlPlaceholder:'https://example.com/длинная/ссылка…',generateBtn:'Создать Ссылку',shortenBtn:'Сократить URL',readyLabel:'✓ Ссылка Готова',shortReadyLabel:'✓ Короткая Ссылка Готова',copyBtn:'Копировать',copiedBtn:'Скопировано!',sharedTitle:'Кто-то поделился этим с вами',badgeText:'Общий Текст',badgeFile:'Общий Файл',badgeUrl:'Короткая Ссылка',openLink:'Открыть Ссылку →',downloadBtn:'⬇ Скачать',footerText:'Безопасный обмен на любом языке'},
-  tr:{heroTitle:'Her Şeyi Anında<br>Paylaş',heroSub:'Metin, dosya ve bağlantı — hepsi bir arada.',tabText:'Metin',tabFile:'Dosya',tabUrl:'URL Kısaltıcı',textTitle:'Metin Paylaşma',textSub:'Bir bağlantıyla metni anında paylaş.',textLabel:'Metniniz',textPlaceholder:'Buraya yazın veya yapıştırın…',fileTitle:'Dosya Paylaşma',fileSub:'Dosyaları hızlıca gönderin.',uploadLabel:'Dosya Yükle',uploadHint:'<strong>Dosya seç</strong> veya sürükle',urlTitle:'URL Kısaltıcı',urlSub:'Uzun bağlantıları kısa yapın.',urlLabel:'Uzun URL',urlPlaceholder:'https://ornek.com/uzun/link…',generateBtn:'Paylaşım Linki Oluştur',shortenBtn:'URL\'yi Kısalt',readyLabel:'✓ Link Hazır',shortReadyLabel:'✓ Kısa Link Hazır',copyBtn:'Kopyala',copiedBtn:'Kopyalandı!',sharedTitle:'Biri bunu sizinle paylaştı',badgeText:'Paylaşılan Metin',badgeFile:'Paylaşılan Dosya',badgeUrl:'Kısa Link',openLink:'Linki Aç →',downloadBtn:'⬇ İndir',footerText:'Her dilde güvenli paylaşım'},
-  nl:{heroTitle:'Deel Alles,<br>Direct',heroSub:'Tekst, bestanden en links — alles op één plek.',tabText:'Tekst',tabFile:'Bestand',tabUrl:'URL Verkorten',textTitle:'Tekst Delen',textSub:'Deel tekst direct met een link.',textLabel:'Uw Tekst',textPlaceholder:'Typ of plak hier…',fileTitle:'Bestand Delen',fileSub:'Bestanden snel verzenden.',uploadLabel:'Bestand Uploaden',uploadHint:'<strong>Kies een bestand</strong> of sleep',urlTitle:'URL Verkorten',urlSub:'Maak lange links kort.',urlLabel:'Lange URL',urlPlaceholder:'https://voorbeeld.nl/lange/link…',generateBtn:'Deel Link Genereren',shortenBtn:'URL Verkorten',readyLabel:'✓ Link Klaar',shortReadyLabel:'✓ Korte Link Klaar',copyBtn:'Kopiëren',copiedBtn:'Gekopieerd!',sharedTitle:'Iemand heeft dit met u gedeeld',badgeText:'Gedeelde Tekst',badgeFile:'Gedeeld Bestand',badgeUrl:'Korte Link',openLink:'Link Openen →',downloadBtn:'⬇ Downloaden',footerText:'Veilig delen in elke taal'},
-  pl:{heroTitle:'Udostępnij Wszystko,<br>Natychmiast',heroSub:'Tekst, pliki i linki — wszystko w jednym.',tabText:'Tekst',tabFile:'Plik',tabUrl:'Skracanie URL',textTitle:'Udostępnianie Tekstu',textSub:'Udostępnij tekst natychmiast przez link.',textLabel:'Twój Tekst',textPlaceholder:'Wpisz lub wklej tutaj…',fileTitle:'Udostępnianie Pliku',fileSub:'Wysyłaj pliki błyskawicznie.',uploadLabel:'Prześlij Plik',uploadHint:'<strong>Wybierz plik</strong> lub przeciągnij',urlTitle:'Skracanie URL',urlSub:'Zamień długie linki w krótkie.',urlLabel:'Długi URL',urlPlaceholder:'https://przyklad.pl/długi/link…',generateBtn:'Generuj Link',shortenBtn:'Skróć URL',readyLabel:'✓ Link Gotowy',shortReadyLabel:'✓ Krótki Link Gotowy',copyBtn:'Kopiuj',copiedBtn:'Skopiowano!',sharedTitle:'Ktoś udostępnił to Tobie',badgeText:'Udostępniony Tekst',badgeFile:'Udostępniony Plik',badgeUrl:'Krótki Link',openLink:'Otwórz Link →',downloadBtn:'⬇ Pobierz',footerText:'Bezpieczne udostępnianie w każdym języku'},
+  en:{heroTitle:'Share Anything,<br>Instantly',heroSub:'Text, files, and links — all in one place.',tabText:'Text',tabFile:'File',tabUrl:'URL Shortener',textTitle:'Text Sharing',textSub:'Share text instantly with a link.',textLabel:'Your Text',textPlaceholder:'Type or paste anything here…',fileTitle:'File Sharing',fileSub:'Send files fast.',uploadLabel:'Upload File',uploadHint:'<strong>Choose a file</strong> or drag and drop',urlTitle:'URL Shortener',urlSub:'Turn long links into clean, short ones.',urlLabel:'Long URL',urlPlaceholder:'https://example.com/very/long/link…',generateBtn:'Generate Share Link',shortenBtn:'Shorten URL',readyLabel:'✓ Link Ready',shortReadyLabel:'✓ Short Link Ready',copyBtn:'Copy',copiedBtn:'Copied!',sharedTitle:'Someone shared this with you',badgeText:'Shared Text',badgeFile:'Shared File',badgeUrl:'Short Link',openLink:'Open Link →',downloadBtn:'⬇ Download',footerText:'Secure sharing, any language',expiryLabel:'Link Expires In',expiry1h:'1 Hour',expiry2h:'2 Hours',expiresIn:'Expires in',expiryNote:'This link expires at',expiredBadge:'Link Expired',expiredTitle:'This link has expired',expiredMsg:'<strong>This share link is no longer valid.</strong><br>Links expire automatically to protect your content from unauthorized access.',expiryInfoText:'Link auto-expires at'},
+  es:{heroTitle:'Comparte Cualquier Cosa,<br>Al Instante',heroSub:'Texto, archivos y enlaces — todo en un lugar.',tabText:'Texto',tabFile:'Archivo',tabUrl:'Acortador',textTitle:'Compartir Texto',textSub:'Comparte texto al instante con un enlace.',textLabel:'Tu Texto',textPlaceholder:'Escribe o pega aquí…',fileTitle:'Compartir Archivo',fileSub:'Envía archivos rápido.',uploadLabel:'Subir Archivo',uploadHint:'<strong>Elige un archivo</strong> o arrastra',urlTitle:'Acortador de URL',urlSub:'Convierte enlaces largos en cortos.',urlLabel:'URL Larga',urlPlaceholder:'https://ejemplo.com/enlace/muy/largo…',generateBtn:'Generar Enlace',shortenBtn:'Acortar URL',readyLabel:'✓ Enlace Listo',shortReadyLabel:'✓ Enlace Corto Listo',copyBtn:'Copiar',copiedBtn:'¡Copiado!',sharedTitle:'Alguien compartió esto contigo',badgeText:'Texto Compartido',badgeFile:'Archivo Compartido',badgeUrl:'Enlace Corto',openLink:'Abrir Enlace →',downloadBtn:'⬇ Descargar',footerText:'Compartir seguro, en cualquier idioma',expiryLabel:'El enlace expira en',expiry1h:'1 Hora',expiry2h:'2 Horas',expiresIn:'Expira en',expiryNote:'Este enlace expira a las',expiredBadge:'Enlace Expirado',expiredTitle:'Este enlace ha expirado',expiredMsg:'<strong>Este enlace ya no es válido.</strong><br>Los enlaces expiran automáticamente para proteger tu contenido.',expiryInfoText:'Expira automáticamente a las'},
+  fr:{heroTitle:'Partagez N\'importe Quoi,<br>Instantanément',heroSub:'Textes, fichiers et liens — tout en un.',tabText:'Texte',tabFile:'Fichier',tabUrl:'Raccourcisseur',textTitle:'Partage de Texte',textSub:'Partagez du texte avec un lien.',textLabel:'Votre Texte',textPlaceholder:'Écrivez ou collez ici…',fileTitle:'Partage de Fichier',fileSub:'Envoyez des fichiers rapidement.',uploadLabel:'Téléverser',uploadHint:'<strong>Choisissez un fichier</strong> ou glissez',urlTitle:'Raccourcisseur d\'URL',urlSub:'Transformez les longs liens en courts.',urlLabel:'URL Longue',urlPlaceholder:'https://exemple.com/lien/tres/long…',generateBtn:'Générer un Lien',shortenBtn:'Raccourcir l\'URL',readyLabel:'✓ Lien Prêt',shortReadyLabel:'✓ Lien Court Prêt',copyBtn:'Copier',copiedBtn:'Copié !',sharedTitle:'Quelqu\'un a partagé ceci avec vous',badgeText:'Texte Partagé',badgeFile:'Fichier Partagé',badgeUrl:'Lien Court',openLink:'Ouvrir le Lien →',downloadBtn:'⬇ Télécharger',footerText:'Partage sécurisé, dans toutes les langues',expiryLabel:'Le lien expire dans',expiry1h:'1 Heure',expiry2h:'2 Heures',expiresIn:'Expire dans',expiryNote:'Ce lien expire à',expiredBadge:'Lien Expiré',expiredTitle:'Ce lien a expiré',expiredMsg:'<strong>Ce lien n\'est plus valide.</strong><br>Les liens expirent automatiquement pour protéger votre contenu.',expiryInfoText:'Expiration automatique à'},
+  de:{heroTitle:'Alles Teilen,<br>Sofort',heroSub:'Texte, Dateien und Links — alles an einem Ort.',tabText:'Text',tabFile:'Datei',tabUrl:'URL-Kürzer',textTitle:'Text Teilen',textSub:'Text sofort mit einem Link teilen.',textLabel:'Ihr Text',textPlaceholder:'Hier eingeben oder einfügen…',fileTitle:'Datei Teilen',fileSub:'Dateien schnell senden.',uploadLabel:'Datei Hochladen',uploadHint:'<strong>Datei auswählen</strong> oder ziehen',urlTitle:'URL-Kürzer',urlSub:'Lange Links in kurze umwandeln.',urlLabel:'Langer Link',urlPlaceholder:'https://beispiel.de/sehr/langer/link…',generateBtn:'Link Erstellen',shortenBtn:'URL Kürzen',readyLabel:'✓ Link Bereit',shortReadyLabel:'✓ Kurzer Link Bereit',copyBtn:'Kopieren',copiedBtn:'Kopiert!',sharedTitle:'Jemand hat dies mit Ihnen geteilt',badgeText:'Geteilter Text',badgeFile:'Geteilte Datei',badgeUrl:'Kurzer Link',openLink:'Link Öffnen →',downloadBtn:'⬇ Herunterladen',footerText:'Sicheres Teilen in jeder Sprache',expiryLabel:'Link läuft ab in',expiry1h:'1 Stunde',expiry2h:'2 Stunden',expiresIn:'Läuft ab in',expiryNote:'Dieser Link läuft ab um',expiredBadge:'Link Abgelaufen',expiredTitle:'Dieser Link ist abgelaufen',expiredMsg:'<strong>Dieser Link ist nicht mehr gültig.</strong><br>Links laufen automatisch ab, um Ihren Inhalt zu schützen.',expiryInfoText:'Automatisch ablaufend um'},
+  pt:{heroTitle:'Compartilhe Qualquer Coisa,<br>Instantaneamente',heroSub:'Textos, arquivos e links — tudo em um lugar.',tabText:'Texto',tabFile:'Arquivo',tabUrl:'Encurtador',textTitle:'Compartilhar Texto',textSub:'Compartilhe texto com um link.',textLabel:'Seu Texto',textPlaceholder:'Digite ou cole aqui…',fileTitle:'Compartilhar Arquivo',fileSub:'Envie arquivos rapidamente.',uploadLabel:'Enviar Arquivo',uploadHint:'<strong>Escolha um arquivo</strong> ou arraste',urlTitle:'Encurtador de URL',urlSub:'Transforme links longos em curtos.',urlLabel:'URL Longa',urlPlaceholder:'https://exemplo.com/link/muito/longo…',generateBtn:'Gerar Link',shortenBtn:'Encurtar URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Curto Pronto',copyBtn:'Copiar',copiedBtn:'Copiado!',sharedTitle:'Alguém compartilhou isso com você',badgeText:'Texto Compartilhado',badgeFile:'Arquivo Compartilhado',badgeUrl:'Link Curto',openLink:'Abrir Link →',downloadBtn:'⬇ Baixar',footerText:'Compartilhamento seguro, em qualquer idioma',expiryLabel:'Link expira em',expiry1h:'1 Hora',expiry2h:'2 Horas',expiresIn:'Expira em',expiryNote:'Este link expira às',expiredBadge:'Link Expirado',expiredTitle:'Este link expirou',expiredMsg:'<strong>Este link não é mais válido.</strong><br>Os links expiram automaticamente para proteger seu conteúdo.',expiryInfoText:'Expiração automática às'},
+  it:{heroTitle:'Condividi Qualsiasi Cosa,<br>Istantaneamente',heroSub:'Testo, file e link — tutto in un posto.',tabText:'Testo',tabFile:'File',tabUrl:'Accorciatore',textTitle:'Condivisione Testo',textSub:'Condividi testo con un link.',textLabel:'Il Tuo Testo',textPlaceholder:'Scrivi o incolla qui…',fileTitle:'Condivisione File',fileSub:'Invia file velocemente.',uploadLabel:'Carica File',uploadHint:'<strong>Scegli un file</strong> o trascina',urlTitle:'Accorciatore URL',urlSub:'Trasforma link lunghi in corti.',urlLabel:'URL Lungo',urlPlaceholder:'https://esempio.it/link/molto/lungo…',generateBtn:'Genera Link',shortenBtn:'Accorcia URL',readyLabel:'✓ Link Pronto',shortReadyLabel:'✓ Link Corto Pronto',copyBtn:'Copia',copiedBtn:'Copiato!',sharedTitle:'Qualcuno ha condiviso questo con te',badgeText:'Testo Condiviso',badgeFile:'File Condiviso',badgeUrl:'Link Corto',openLink:'Apri Link →',downloadBtn:'⬇ Scarica',footerText:'Condivisione sicura in qualsiasi lingua',expiryLabel:'Il link scade tra',expiry1h:'1 Ora',expiry2h:'2 Ore',expiresIn:'Scade tra',expiryNote:'Questo link scade alle',expiredBadge:'Link Scaduto',expiredTitle:'Questo link è scaduto',expiredMsg:'<strong>Questo link non è più valido.</strong><br>I link scadono automaticamente per proteggere i tuoi contenuti.',expiryInfoText:'Scadenza automatica alle'},
+  ja:{heroTitle:'何でも共有しよう、<br>すぐに',heroSub:'テキスト・ファイル・リンクをワンストップで。',tabText:'テキスト',tabFile:'ファイル',tabUrl:'URL短縮',textTitle:'テキスト共有',textSub:'リンクでテキストをすぐに共有。',textLabel:'テキスト',textPlaceholder:'ここに入力または貼り付け…',fileTitle:'ファイル共有',fileSub:'ファイルを素早く送信。',uploadLabel:'ファイルをアップロード',uploadHint:'<strong>ファイルを選択</strong>またはドラッグ',urlTitle:'URL短縮',urlSub:'長いリンクをすっきり短く。',urlLabel:'長いURL',urlPlaceholder:'https://example.com/長い/リンク…',generateBtn:'共有リンクを生成',shortenBtn:'URLを短縮',readyLabel:'✓ リンク完成',shortReadyLabel:'✓ 短縮リンク完成',copyBtn:'コピー',copiedBtn:'コピーしました！',sharedTitle:'誰かがこれをあなたと共有しました',badgeText:'共有テキスト',badgeFile:'共有ファイル',badgeUrl:'短縮リンク',openLink:'リンクを開く →',downloadBtn:'⬇ ダウンロード',footerText:'どの言語でも安全に共有',expiryLabel:'有効期限',expiry1h:'1時間',expiry2h:'2時間',expiresIn:'残り時間',expiryNote:'このリンクの有効期限：',expiredBadge:'リンク期限切れ',expiredTitle:'このリンクは期限切れです',expiredMsg:'<strong>このリンクはもう有効ではありません。</strong><br>リンクは自動的に期限切れになり、コンテンツを保護します。',expiryInfoText:'自動期限切れ：'},
+  zh:{heroTitle:'即刻分享一切',heroSub:'文字、文件和链接 — 一站搞定。',tabText:'文字',tabFile:'文件',tabUrl:'短链接',textTitle:'文字分享',textSub:'用链接即时分享文字。',textLabel:'你的文字',textPlaceholder:'在这里输入或粘贴…',fileTitle:'文件分享',fileSub:'快速发送文件。',uploadLabel:'上传文件',uploadHint:'<strong>选择文件</strong>或拖放',urlTitle:'短链接生成器',urlSub:'把长链接变成简短的。',urlLabel:'长链接',urlPlaceholder:'https://example.com/长/链接…',generateBtn:'生成分享链接',shortenBtn:'缩短链接',readyLabel:'✓ 链接已就绪',shortReadyLabel:'✓ 短链接已就绪',copyBtn:'复制',copiedBtn:'已复制！',sharedTitle:'有人与你分享了这个',badgeText:'共享文字',badgeFile:'共享文件',badgeUrl:'短链接',openLink:'打开链接 →',downloadBtn:'⬇ 下载',footerText:'安全分享，支持任意语言',expiryLabel:'链接有效期',expiry1h:'1小时',expiry2h:'2小时',expiresIn:'剩余时间',expiryNote:'链接到期时间：',expiredBadge:'链接已过期',expiredTitle:'此链接已过期',expiredMsg:'<strong>此分享链接已失效。</strong><br>链接会自动过期以保护您的内容安全。',expiryInfoText:'自动过期时间：'},
+  ko:{heroTitle:'무엇이든 즉시<br>공유하세요',heroSub:'텍스트, 파일, 링크 — 한 곳에서.',tabText:'텍스트',tabFile:'파일',tabUrl:'URL 단축',textTitle:'텍스트 공유',textSub:'링크로 텍스트를 즉시 공유.',textLabel:'텍스트',textPlaceholder:'여기에 입력하거나 붙여넣기…',fileTitle:'파일 공유',fileSub:'파일을 빠르게 전송.',uploadLabel:'파일 업로드',uploadHint:'<strong>파일 선택</strong> 또는 드래그',urlTitle:'URL 단축기',urlSub:'긴 링크를 짧게 만들어요.',urlLabel:'긴 URL',urlPlaceholder:'https://example.com/긴/링크…',generateBtn:'공유 링크 생성',shortenBtn:'URL 단축',readyLabel:'✓ 링크 준비됨',shortReadyLabel:'✓ 단축 링크 준비됨',copyBtn:'복사',copiedBtn:'복사됨!',sharedTitle:'누군가 이것을 공유했습니다',badgeText:'공유된 텍스트',badgeFile:'공유된 파일',badgeUrl:'단축 링크',openLink:'링크 열기 →',downloadBtn:'⬇ 다운로드',footerText:'모든 언어의 안전한 공유',expiryLabel:'링크 만료 시간',expiry1h:'1시간',expiry2h:'2시간',expiresIn:'남은 시간',expiryNote:'링크 만료 시각:',expiredBadge:'링크 만료됨',expiredTitle:'이 링크는 만료되었습니다',expiredMsg:'<strong>이 공유 링크는 더 이상 유효하지 않습니다.</strong><br>링크는 콘텐츠를 보호하기 위해 자동으로 만료됩니다.',expiryInfoText:'자동 만료 시각:'},
+  hi:{heroTitle:'कुछ भी शेयर करें,<br>तुरंत',heroSub:'टेक्स्ट, फ़ाइलें और लिंक — एक जगह।',tabText:'टेक्स्ट',tabFile:'फ़ाइल',tabUrl:'URL छोटा करें',textTitle:'टेक्स्ट शेयरिंग',textSub:'लिंक से टेक्स्ट तुरंत शेयर करें।',textLabel:'आपका टेक्स्ट',textPlaceholder:'यहाँ टाइप करें या पेस्ट करें…',fileTitle:'फ़ाइल शेयरिंग',fileSub:'फ़ाइलें जल्दी भेजें।',uploadLabel:'फ़ाइल अपलोड करें',uploadHint:'<strong>फ़ाइल चुनें</strong> या ड्रैग करें',urlTitle:'URL छोटा करें',urlSub:'लंबे लिंक को छोटा बनाएं।',urlLabel:'लंबा URL',urlPlaceholder:'https://example.com/लंबा/लिंक…',generateBtn:'शेयर लिंक बनाएं',shortenBtn:'URL छोटा करें',readyLabel:'✓ लिंक तैयार',shortReadyLabel:'✓ छोटा लिंक तैयार',copyBtn:'कॉपी',copiedBtn:'कॉपी हो गया!',sharedTitle:'किसी ने यह आपके साथ शेयर किया',badgeText:'शेयर्ड टेक्स्ट',badgeFile:'शेयर्ड फ़ाइल',badgeUrl:'छोटा लिंक',openLink:'लिंक खोलें →',downloadBtn:'⬇ डाउनलोड',footerText:'किसी भी भाषा में सुरक्षित शेयरिंग',expiryLabel:'लिंक की समय सीमा',expiry1h:'1 घंटा',expiry2h:'2 घंटे',expiresIn:'समय शेष',expiryNote:'लिंक समाप्त होगा:',expiredBadge:'लिंक समाप्त हो गया',expiredTitle:'यह लिंक समाप्त हो गया है',expiredMsg:'<strong>यह शेयर लिंक अब मान्य नहीं है।</strong><br>आपकी सामग्री सुरक्षित रखने के लिए लिंक स्वचालित रूप से समाप्त हो जाते हैं।',expiryInfoText:'स्वत: समाप्ति:'},
+  ar:{heroTitle:'شارك أي شيء،<br>فورًا',heroSub:'نصوص وملفات وروابط — كل شيء في مكان واحد.',tabText:'نص',tabFile:'ملف',tabUrl:'اختصار الروابط',textTitle:'مشاركة النص',textSub:'شارك النص فورًا برابط.',textLabel:'نصك',textPlaceholder:'اكتب أو الصق هنا…',fileTitle:'مشاركة الملف',fileSub:'أرسل الملفات بسرعة.',uploadLabel:'رفع ملف',uploadHint:'<strong>اختر ملفًا</strong> أو اسحبه',urlTitle:'مختصر الروابط',urlSub:'حوّل الروابط الطويلة إلى قصيرة.',urlLabel:'رابط طويل',urlPlaceholder:'https://example.com/رابط/طويل…',generateBtn:'إنشاء رابط المشاركة',shortenBtn:'اختصار الرابط',readyLabel:'✓ الرابط جاهز',shortReadyLabel:'✓ الرابط المختصر جاهز',copyBtn:'نسخ',copiedBtn:'تم النسخ!',sharedTitle:'شخص ما شارك هذا معك',badgeText:'نص مشارك',badgeFile:'ملف مشارك',badgeUrl:'رابط مختصر',openLink:'فتح الرابط →',downloadBtn:'⬇ تنزيل',footerText:'مشاركة آمنة بأي لغة',expiryLabel:'انتهاء الرابط خلال',expiry1h:'ساعة واحدة',expiry2h:'ساعتان',expiresIn:'ينتهي خلال',expiryNote:'ينتهي الرابط في',expiredBadge:'انتهى الرابط',expiredTitle:'انتهت صلاحية هذا الرابط',expiredMsg:'<strong>هذا الرابط لم يعد صالحًا.</strong><br>تنتهي الروابط تلقائيًا لحماية محتواك من الوصول غير المصرح به.',expiryInfoText:'انتهاء تلقائي في'},
+  ru:{heroTitle:'Поделитесь Чем Угодно,<br>Мгновенно',heroSub:'Тексты, файлы и ссылки — всё в одном месте.',tabText:'Текст',tabFile:'Файл',tabUrl:'Сократить URL',textTitle:'Поделиться Текстом',textSub:'Поделитесь текстом через ссылку.',textLabel:'Ваш Текст',textPlaceholder:'Введите или вставьте текст здесь…',fileTitle:'Поделиться Файлом',fileSub:'Отправляйте файлы быстро.',uploadLabel:'Загрузить Файл',uploadHint:'<strong>Выберите файл</strong> или перетащите',urlTitle:'Сократить URL',urlSub:'Превращайте длинные ссылки в короткие.',urlLabel:'Длинный URL',urlPlaceholder:'https://example.com/длинная/ссылка…',generateBtn:'Создать Ссылку',shortenBtn:'Сократить URL',readyLabel:'✓ Ссылка Готова',shortReadyLabel:'✓ Короткая Ссылка Готова',copyBtn:'Копировать',copiedBtn:'Скопировано!',sharedTitle:'Кто-то поделился этим с вами',badgeText:'Общий Текст',badgeFile:'Общий Файл',badgeUrl:'Короткая Ссылка',openLink:'Открыть Ссылку →',downloadBtn:'⬇ Скачать',footerText:'Безопасный обмен на любом языке',expiryLabel:'Ссылка истечёт через',expiry1h:'1 Час',expiry2h:'2 Часа',expiresIn:'Истечёт через',expiryNote:'Ссылка истечёт в',expiredBadge:'Ссылка истекла',expiredTitle:'Эта ссылка истекла',expiredMsg:'<strong>Эта ссылка больше недействительна.</strong><br>Ссылки истекают автоматически для защиты вашего контента.',expiryInfoText:'Автоистечение в'},
+  tr:{heroTitle:'Her Şeyi Anında<br>Paylaş',heroSub:'Metin, dosya ve bağlantı — hepsi bir arada.',tabText:'Metin',tabFile:'Dosya',tabUrl:'URL Kısaltıcı',textTitle:'Metin Paylaşma',textSub:'Bir bağlantıyla metni anında paylaş.',textLabel:'Metniniz',textPlaceholder:'Buraya yazın veya yapıştırın…',fileTitle:'Dosya Paylaşma',fileSub:'Dosyaları hızlıca gönderin.',uploadLabel:'Dosya Yükle',uploadHint:'<strong>Dosya seç</strong> veya sürükle',urlTitle:'URL Kısaltıcı',urlSub:'Uzun bağlantıları kısa yapın.',urlLabel:'Uzun URL',urlPlaceholder:'https://ornek.com/uzun/link…',generateBtn:'Paylaşım Linki Oluştur',shortenBtn:'URL\'yi Kısalt',readyLabel:'✓ Link Hazır',shortReadyLabel:'✓ Kısa Link Hazır',copyBtn:'Kopyala',copiedBtn:'Kopyalandı!',sharedTitle:'Biri bunu sizinle paylaştı',badgeText:'Paylaşılan Metin',badgeFile:'Paylaşılan Dosya',badgeUrl:'Kısa Link',openLink:'Linki Aç →',downloadBtn:'⬇ İndir',footerText:'Her dilde güvenli paylaşım',expiryLabel:'Linkin süresi dolacak',expiry1h:'1 Saat',expiry2h:'2 Saat',expiresIn:'Dolacak süre',expiryNote:'Link süresi dolacak:',expiredBadge:'Link Süresi Doldu',expiredTitle:'Bu linkin süresi doldu',expiredMsg:'<strong>Bu paylaşım linki artık geçerli değil.</strong><br>Bağlantılar içeriğinizi korumak için otomatik olarak sona erer.',expiryInfoText:'Otomatik sona erme:'},
+  nl:{heroTitle:'Deel Alles,<br>Direct',heroSub:'Tekst, bestanden en links — alles op één plek.',tabText:'Tekst',tabFile:'Bestand',tabUrl:'URL Verkorten',textTitle:'Tekst Delen',textSub:'Deel tekst direct met een link.',textLabel:'Uw Tekst',textPlaceholder:'Typ of plak hier…',fileTitle:'Bestand Delen',fileSub:'Bestanden snel verzenden.',uploadLabel:'Bestand Uploaden',uploadHint:'<strong>Kies een bestand</strong> of sleep',urlTitle:'URL Verkorten',urlSub:'Maak lange links kort.',urlLabel:'Lange URL',urlPlaceholder:'https://voorbeeld.nl/lange/link…',generateBtn:'Deel Link Genereren',shortenBtn:'URL Verkorten',readyLabel:'✓ Link Klaar',shortReadyLabel:'✓ Korte Link Klaar',copyBtn:'Kopiëren',copiedBtn:'Gekopieerd!',sharedTitle:'Iemand heeft dit met u gedeeld',badgeText:'Gedeelde Tekst',badgeFile:'Gedeeld Bestand',badgeUrl:'Korte Link',openLink:'Link Openen →',downloadBtn:'⬇ Downloaden',footerText:'Veilig delen in elke taal',expiryLabel:'Link vervalt over',expiry1h:'1 Uur',expiry2h:'2 Uur',expiresIn:'Vervalt over',expiryNote:'Link vervalt om',expiredBadge:'Link Verlopen',expiredTitle:'Deze link is verlopen',expiredMsg:'<strong>Deze deellink is niet meer geldig.</strong><br>Links verlopen automatisch om uw inhoud te beschermen.',expiryInfoText:'Automatisch verlopen om'},
+  pl:{heroTitle:'Udostępnij Wszystko,<br>Natychmiast',heroSub:'Tekst, pliki i linki — wszystko w jednym.',tabText:'Tekst',tabFile:'Plik',tabUrl:'Skracanie URL',textTitle:'Udostępnianie Tekstu',textSub:'Udostępnij tekst natychmiast przez link.',textLabel:'Twój Tekst',textPlaceholder:'Wpisz lub wklej tutaj…',fileTitle:'Udostępnianie Pliku',fileSub:'Wysyłaj pliki błyskawicznie.',uploadLabel:'Prześlij Plik',uploadHint:'<strong>Wybierz plik</strong> lub przeciągnij',urlTitle:'Skracanie URL',urlSub:'Zamień długie linki w krótkie.',urlLabel:'Długi URL',urlPlaceholder:'https://przyklad.pl/długi/link…',generateBtn:'Generuj Link',shortenBtn:'Skróć URL',readyLabel:'✓ Link Gotowy',shortReadyLabel:'✓ Krótki Link Gotowy',copyBtn:'Kopiuj',copiedBtn:'Skopiowano!',sharedTitle:'Ktoś udostępnił to Tobie',badgeText:'Udostępniony Tekst',badgeFile:'Udostępniony Plik',badgeUrl:'Krótki Link',openLink:'Otwórz Link →',downloadBtn:'⬇ Pobierz',footerText:'Bezpieczne udostępnianie w każdym języku',expiryLabel:'Link wygaśnie za',expiry1h:'1 Godzinę',expiry2h:'2 Godziny',expiresIn:'Wygasa za',expiryNote:'Link wygasa o',expiredBadge:'Link Wygasł',expiredTitle:'Ten link wygasł',expiredMsg:'<strong>Ten link do udostępniania jest już nieważny.</strong><br>Linki wygasają automatycznie, aby chronić Twoje treści.',expiryInfoText:'Automatyczne wygaśnięcie o'},
 };
-
+ 
 let currentLang = detectLang();
 let currentMode = 'text';
 const links = {text:'',file:'',url:''};
-
+// Selected expiry hours per mode (default 1)
+const selectedExpiry = {text:1, file:1, url:1};
+ 
+let countdownInterval = null;
+ 
 function detectLang() {
   const code = (navigator.language||'en').split('-')[0].toLowerCase();
   return T[code] ? code : 'en';
 }
 function t(k) { return (T[currentLang]||T.en)[k]||''; }
-
+ 
+/* ── Expiry ── */
+function selectExpiry(mode, hours) {
+  selectedExpiry[mode] = hours;
+  // Find the expiry options in the correct panel
+  const panel = document.getElementById(`panel-${mode}`);
+  panel.querySelectorAll('.expiry-opt').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.dataset.hours) === hours);
+  });
+}
+ 
+function formatExpiryTime(ts) {
+  const d = new Date(ts);
+  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+ 
+function formatCountdown(ms) {
+  if (ms <= 0) return '0:00';
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+ 
+/* ── Language ── */
 function buildLangMenu() {
   document.getElementById('langDropdown').innerHTML = languages.map(l=>`
     <div class="lang-option ${l.code===currentLang?'active':''}" onclick="setLang('${l.code}')">
@@ -525,14 +706,16 @@ function applyTranslations() {
     if (v) el.placeholder = v;
   });
 }
-
+ 
+/* ── Mode switch ── */
 function switchMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.tab').forEach(tb => tb.classList.toggle('active', tb.dataset.mode===mode));
   document.querySelectorAll('.mode-panel').forEach(p => p.classList.toggle('active', p.id===`panel-${mode}`));
   document.getElementById('mainCard').className = `card mode-${mode}`;
 }
-
+ 
+/* ── File input ── */
 function onFileSelect(input) {
   if (input.files[0]) {
     document.getElementById('fileName').textContent = input.files[0].name;
@@ -551,7 +734,8 @@ zone.addEventListener('drop', e=>{
   const f=e.dataTransfer.files;
   if(f[0]){document.getElementById('fileInput').files=f;onFileSelect(document.getElementById('fileInput'));}
 });
-
+ 
+/* ── Share ── */
 function doShare(mode) {
   if (mode==='text') {
     const txt = document.getElementById('textInput').value.trim();
@@ -570,7 +754,12 @@ function doShare(mode) {
     saveAndShow(mode,{type:'url',url,lang:currentLang});
   }
 }
-function saveAndShow(mode,data) {
+ 
+function saveAndShow(mode, data) {
+  const hours = selectedExpiry[mode] || 1;
+  const expiresAt = Date.now() + hours * 60 * 60 * 1000;
+  data.expiresAt = expiresAt;
+ 
   const id = Math.random().toString(36).substring(2,10);
   localStorage.setItem('ts_'+id, JSON.stringify(data));
   const link = window.location.href.split('?')[0]+'?s='+id;
@@ -579,7 +768,11 @@ function saveAndShow(mode,data) {
   document.getElementById(`result-${mode}`).classList.add('show');
   const cb = document.getElementById(`copyBtn-${mode}`);
   cb.classList.remove('copied'); cb.textContent = t('copyBtn');
+  // Show expiry note
+  document.getElementById(`expiryInfo-${mode}`).textContent =
+    `${t('expiryInfoText')} ${formatExpiryTime(expiresAt)}`;
 }
+ 
 function copyLink(mode) {
   navigator.clipboard.writeText(links[mode]).then(()=>{
     const cb = document.getElementById(`copyBtn-${mode}`);
@@ -592,7 +785,8 @@ function shake(panelId) {
   el.style.animation='none'; el.offsetHeight; el.style.animation='shake 0.4s ease';
   setTimeout(()=>el.style.animation='',400);
 }
-
+ 
+/* ── Load shared view ── */
 function loadShared() {
   const p = new URLSearchParams(window.location.search);
   const id = p.get('s') || p.get('share');
@@ -600,45 +794,100 @@ function loadShared() {
   const raw = localStorage.getItem('ts_'+id) || localStorage.getItem(id);
   if (!raw) return;
   const data = JSON.parse(raw);
+ 
+  // Apply language
   if (data.lang && T[data.lang]) {
     currentLang = data.lang;
     const l = languages.find(x=>x.code===data.lang);
     document.documentElement.dir = l.dir;
   }
+ 
   document.getElementById('heroSection').style.display = 'none';
   document.getElementById('mainSection').style.display  = 'none';
   document.getElementById('view-page').style.display    = 'block';
-
+ 
   const card  = document.getElementById('viewCard');
   const badge = document.getElementById('viewBadge');
   const cont  = document.getElementById('viewContent');
-
+  const cdBar = document.getElementById('countdownBar');
+  const cdTime = document.getElementById('cdTime');
+ 
+  // ── Check expiry ──
+  const now = Date.now();
+  if (data.expiresAt && now > data.expiresAt) {
+    // Expired — show expired state
+    card.className = 'view-card type-expired';
+    badge.textContent = '🔒 ' + t('expiredBadge');
+    document.getElementById('viewTitle').textContent = t('expiredTitle');
+    cont.innerHTML = `
+      <div class="expired-body">
+        <span class="expired-icon">⏰</span>
+        <p class="expired-msg">${t('expiredMsg')}</p>
+      </div>`;
+    applyTranslations();
+    return;
+  }
+ 
+  // ── Valid — render content ──
   if (data.type==='text'||data.message) {
     card.className='view-card type-text';
     badge.textContent='✍️ '+t('badgeText');
     const div=document.createElement('div'); div.className='text-content';
     div.textContent=data.text||data.message; cont.appendChild(div);
+    cdBar.className = 'countdown-bar type-text';
   } else if (data.type==='file'||data.file) {
     card.className='view-card type-file';
     badge.textContent='📎 '+t('badgeFile');
     const a=document.createElement('a'); a.href=data.file; a.download=data.fileName;
     a.className='dl-btn'; a.innerHTML=`${t('downloadBtn')} <em>${data.fileName}</em>`;
     cont.appendChild(a);
+    cdBar.className = 'countdown-bar type-file';
   } else if (data.type==='url') {
     card.className='view-card type-url';
     badge.textContent='🔗 '+t('badgeUrl');
     const a=document.createElement('a'); a.href=data.url; a.target='_blank'; a.rel='noopener noreferrer';
     a.className='url-redirect'; a.textContent=t('openLink'); cont.appendChild(a);
     const p2=document.createElement('p'); p2.className='url-original'; p2.textContent=data.url; cont.appendChild(p2);
+    cdBar.className = 'countdown-bar type-url';
   }
+ 
   document.getElementById('viewTitle').textContent = t('sharedTitle');
   applyTranslations();
+ 
+  // ── Countdown timer ──
+  if (data.expiresAt) {
+    cdBar.style.display = 'flex';
+    cdBar.querySelector('.cd-label').textContent = t('expiresIn');
+ 
+    function tick() {
+      const remaining = data.expiresAt - Date.now();
+      if (remaining <= 0) {
+        clearInterval(countdownInterval);
+        // Flip to expired without reload
+        card.className = 'view-card type-expired';
+        badge.textContent = '🔒 ' + t('expiredBadge');
+        document.getElementById('viewTitle').textContent = t('expiredTitle');
+        cont.innerHTML = `
+          <div class="expired-body">
+            <span class="expired-icon">⏰</span>
+            <p class="expired-msg">${t('expiredMsg')}</p>
+          </div>`;
+        cdBar.style.display = 'none';
+        return;
+      }
+      cdTime.textContent = formatCountdown(remaining);
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+  }
 }
-
+ 
 buildLangMenu();
 applyTranslations();
 loadShared();
-
+ 
 </script>
 </body>
 </html>
+ 
+
