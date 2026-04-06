@@ -1,0 +1,220 @@
+/* ── 1. OUTER RING — rotating conic border ── */
+@keyframes ringRotate {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 2. NUMBER FLIP — 3D card flip on change ── */
+@keyframes flipOut {
+  0%   { transform: rotateX(0deg);   opacity: 1; }
+  100% { transform: rotateX(90deg);  opacity: 0; }
+}
+@keyframes flipIn {
+  0%   { transform: rotateX(-90deg); opacity: 0; }
+  100% { transform: rotateX(0deg);   opacity: 1; }
+}
+
+/* ── 3. GLOW PULSE — number glows green rhythmically ── */
+@keyframes numGlow {
+  0%, 100% { text-shadow: 0 0 0px  #4db840, 0 0 0px  #4db840; }
+  50%       { text-shadow: 0 0 18px #4db840, 0 0 40px rgba(77,184,64,.4); }
+}
+
+/* ── 4. SEPARATOR BLINK — colon dots fade in/out ── */
+@keyframes colonBlink {
+  0%, 100% { opacity: 1;   transform: scaleY(1);  }
+  50%       { opacity: .15; transform: scaleY(.7); }
+}
+
+/* ── 5. TICK BOUNCE — card micro-bounce each second ── */
+@keyframes tickBounce {
+  0%   { transform: translateY(0)   scale(1);    }
+  20%  { transform: translateY(-6px) scale(1.03); }
+  50%  { transform: translateY(2px)  scale(.98);  }
+  100% { transform: translateY(0)   scale(1);    }
+}
+
+/* ── 6. LABEL SLIDE — label slides up on load ── */
+@keyframes labelSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── 7. CARD ENTRANCE — staggered scale-in on load ── */
+@keyframes cardPop {
+  0%   { opacity: 0; transform: scale(.7)    translateY(20px); }
+  70%  {             transform: scale(1.04)  translateY(-2px); }
+  100% { opacity: 1; transform: scale(1)     translateY(0);    }
+}
+
+/* ── 8. PROGRESS ARC — SVG stroke draws in on load ── */
+@keyframes arcFill {
+  from { stroke-dashoffset: 283; }
+  to   { stroke-dashoffset: 0;   }
+}
+
+/* ── 9. SHIMMER SWEEP — highlight sweeps across number ── */
+@keyframes shimmerSweep {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ════════════════════════════════
+   LAYOUT
+════════════════════════════════ */
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 3rem;
+}
+
+/* ════════════════════════════════
+   UNIT CARD
+════════════════════════════════ */
+.unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  animation: cardPop .7s cubic-bezier(.175,.885,.32,1.275) both;
+}
+.unit:nth-child(1) { animation-delay: .10s; }
+.unit:nth-child(3) { animation-delay: .25s; }
+.unit:nth-child(5) { animation-delay: .40s; }
+.unit:nth-child(7) { animation-delay: .55s; }
+
+/* ── Rotating conic ring wrapper ── */
+.ring-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 16px;
+  transition: transform .25s ease, filter .25s ease;
+  cursor: default;
+}
+
+/* spinning conic border */
+.ring-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  background: conic-gradient(#4db840 0deg, #1a5c12 180deg, #4db840 360deg);
+  animation: ringRotate 4s linear infinite;
+  z-index: 0;
+}
+
+/* inner background mask */
+.ring-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #0d2a09;
+  border-radius: 14px;
+  z-index: 1;
+}
+
+/* hover lift */
+.unit:hover .ring-wrap {
+  transform: translateY(-6px) scale(1.03);
+  filter: brightness(1.15);
+}
+
+/* ── SVG progress arc ── */
+.arc-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 110px;
+  height: 110px;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+.arc-track {
+  fill: none;
+  stroke: rgba(77,184,64,.1);
+  stroke-width: 3;
+}
+.arc-fill {
+  fill: none;
+  stroke: #4db840;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 283;
+  animation: arcFill 1.5s cubic-bezier(.4,0,.2,1) 1s forwards;
+}
+.unit:nth-child(3) .arc-fill { animation-delay: 1.2s; stroke-dashoffset: 200; }
+.unit:nth-child(5) .arc-fill { animation-delay: 1.4s; stroke-dashoffset: 140; }
+.unit:nth-child(7) .arc-fill { animation-delay: 1.6s; stroke-dashoffset: 80;  }
+
+/* ── Number box ── */
+.num-box {
+  position: relative;
+  z-index: 3;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 300px;
+}
+
+.num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(90deg, #4db840, #a8e89c, #4db840);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation:
+    numGlow     2s ease-in-out infinite,
+    shimmerSweep 3s linear     infinite;
+}
+
+/* flip classes toggled by JS */
+.num.flip-out { animation: flipOut .18s ease-in  forwards; }
+.num.flip-in  { animation: flipIn  .18s ease-out forwards; }
+
+/* ── Label ── */
+.label {
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: rgba(168,232,156,.45);
+  animation: labelSlide .6s ease both;
+}
+.unit:nth-child(1) .label { animation-delay: .60s; }
+.unit:nth-child(3) .label { animation-delay: .75s; }
+.unit:nth-child(5) .label { animation-delay: .90s; }
+.unit:nth-child(7) .label { animation-delay: 1.05s; }
+
+/* tick class added by JS every second */
+.unit.tick .num-box {
+  animation: tickBounce .4s cubic-bezier(.36,.07,.19,.97);
+}
+
+/* ════════════════════════════════
+   SEPARATOR DOTS
+════════════════════════════════ */
+.sep {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: -18px;
+  animation: cardPop .6s ease .3s both;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4db840;
+  animation: colonBlink 1s step-end infinite;
+}
+.dot:nth-child(2) {
+  animation-delay: .5s;
+}
