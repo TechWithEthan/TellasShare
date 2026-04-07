@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Tellas Share</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* ── Variables ─────────────────────────────────────── */
+        :root {
+            --ink:    #0a0a0a;
+            --paper:  #f5f0e8;
+            --accent: #c8402a;
+            --accent2:#2a6fc8;
+            --muted:  #8a8070;
+            --line:   rgba(10,10,10,0.12);
+        }
+
+        /* ── Reset ─────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        /* ── Base ──────────────────────────────────────────── */
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'DM Mono', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ── Noise overlay ─────────────────────────────────── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.5;
+        }
+
+        /* ── Custom cursor ─────────────────────────────────── */
+        .cursor {
+            position: fixed;
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: multiply;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 38px; height: 38px;
+            border: 1.5px solid var(--ink);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.2s;
+        }
+
+        /* ── Vertical decorative line ──────────────────────── */
+        .vline {
+            position: fixed;
+            left: 28px; top: 0; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, var(--line) 20%, var(--line) 80%, transparent);
+            pointer-events: none;
+        }
+
+        /* ── Navigation ────────────────────────────────────── */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 32px 40px;
+            border-bottom: 1px solid var(--line);
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); font-style: italic; }
+        .nav-links { display: flex; gap: 36px; list-style: none; }
+        .nav-links a {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover  { color: var(--ink); }
+        .nav-links a.active { color: var(--accent); }
+
+        /* ── Hero ──────────────────────────────────────────── */
+        .hero {
+            padding: 80px 40px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 1px solid var(--line);
+        }
+        .hero-left {
+            padding-right: 60px;
+            border-right: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+        .stamp {
+            font-family: 'Playfair Display', serif;
+            font-size: 18vw;
+            line-height: 1;
+            font-weight: 700;
+            color: rgba(10,10,10,0.04);
+            position: absolute;
+            right: -2vw; top: -2vw;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: -0.05em;
+        }
+        .hero-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.1s forwards;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 6vw, 6.5rem);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            font-weight: 700;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.2s forwards;
+        }
+        .hero-title em { font-style: italic; color: var(--accent); }
+        .hero-desc {
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: var(--muted);
+            max-width: 360px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.35s forwards;
+        }
+        .hero-right {
+            padding-left: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 20px;
+        }
+        .info-block {
+            margin-bottom: 36px;
+            opacity: 0;
+            animation: fadeUp 0.8s forwards;
+        }
+        .info-block:nth-child(1) { animation-delay: 0.3s; }
+        .info-block:nth-child(2) { animation-delay: 0.45s; }
+        .info-block:nth-child(3) { animation-delay: 0.6s; }
+        .info-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .info-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--ink);
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+        .info-value:hover { color: var(--accent); }
+
+        /* ── Contact section ───────────────────────────────── */
+        .contact-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 65vh;
+        }
+
+        /* ── Form panel ────────────────────────────────────── */
+        .form-panel {
+            padding: 64px 40px;
+            border-right: 1px solid var(--line);
+        }
+        .section-counter {
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 48px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-counter::before {
+            content: '';
+            width: 40px; height: 1px;
+            background: var(--muted);
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 36px;
+            opacity: 0;
+            animation: fadeUp 0.7s forwards;
+        }
+        .form-group:nth-child(1) { animation-delay: 0.5s; }
+        .form-group:nth-child(2) { animation-delay: 0.6s; }
+        .form-group:nth-child(3) { animation-delay: 0.7s; }
+        .form-group:nth-child(4) { animation-delay: 0.8s; }
+        .form-group:nth-child(5) { animation-delay: 0.9s; }
+
+        label {
+            display: block;
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+        .form-group:focus-within label { color: var(--accent); }
+
+        input, textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid var(--line);
+            padding: 10px 0 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.25s;
+            -webkit-appearance: none;
+        }
+        input:focus, textarea:focus { border-bottom-color: var(--ink); }
+        textarea { resize: none; height: 100px; line-height: 1.6; }
+        input::placeholder, textarea::placeholder { color: #c0b9ad; font-style: italic; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        /* ── Chips ─────────────────────────────────────────── */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--line);
+            padding: 6px 14px;
+            font-size: 0.68rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            transition: border-color 0.2s, background 0.2s, color 0.2s;
+        }
+        .chip input[type="checkbox"] { display: none; }
+        .chip:hover { border-color: var(--ink); }
+        .chip.selected { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+        /* ── Submit button ─────────────────────────────────── */
+        .submit-wrap {
+            margin-top: 52px;
+            opacity: 0;
+            animation: fadeUp 0.7s 1s forwards;
+        }
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--ink);
+            color: var(--paper);
+            border: none;
+            padding: 18px 40px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: var(--accent);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+        }
+        .btn-submit:hover::after { transform: translateX(0); }
+        .btn-submit span, .btn-arrow { position: relative; z-index: 1; }
+        .btn-arrow { transition: transform 0.3s; }
+        .btn-submit:hover .btn-arrow { transform: translateX(6px); }
+
+        /* ── Success state ─────────────────────────────────── */
+        .success-msg {
+            display: none;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .success-msg.show { display: block; animation: fadeUp 0.7s forwards; }
+        .success-icon {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 20px;
+        }
+        .success-msg h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+        }
+        .success-msg p { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.06em; }
+
+        /* ── Side panel ────────────────────────────────────── */
+        .side-panel {
+            padding: 64px 40px 64px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .support-headline {
+            display: flex;
+            align-items: flex-end;
+            gap: 16px;
+            margin-bottom: 18px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.5s forwards;
+        }
+        .support-big {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 7vw, 7rem);
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: var(--ink);
+        }
+        .support-sub { padding-bottom: 14px; }
+        .support-sub .sub-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .support-sub .sub-slash {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-style: italic;
+            line-height: 1;
+        }
+        .support-desc {
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: var(--muted);
+            max-width: 320px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.55s forwards;
+        }
+
+        .office-card {
+            margin-bottom: 36px;
+            padding-bottom: 36px;
+            border-bottom: 1px solid var(--line);
+        }
+        .office-card:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .office-card:nth-of-type(1) { opacity: 0; animation: fadeUp 0.8s 0.65s forwards; }
+        .office-card:nth-of-type(2) { opacity: 0; animation: fadeUp 0.8s 0.80s forwards; }
+
+        .office-tag {
+            display: inline-block;
+            font-size: 0.58rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--paper);
+            background: var(--accent2);
+            padding: 3px 9px;
+            margin-bottom: 14px;
+        }
+        .office-city {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .office-addr { font-size: 0.76rem; line-height: 1.9; color: var(--muted); }
+        .office-hours {
+            margin-top: 12px;
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4caf7d;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+
+        /* ── SLA strip ─────────────────────────────────────── */
+        .sla-strip {
+            margin-top: 40px;
+            padding: 24px;
+            background: var(--ink);
+            opacity: 0;
+            animation: fadeUp 0.8s 0.95s forwards;
+        }
+        .sla-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(245,240,232,0.45);
+            margin-bottom: 16px;
+        }
+        .sla-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 1px solid rgba(245,240,232,0.12);
+        }
+        .sla-cell { padding: 16px 0; }
+        .sla-cell:not(:last-child) {
+            border-right: 1px solid rgba(245,240,232,0.12);
+            padding-right: 16px;
+        }
+        .sla-cell:not(:first-child) { padding-left: 16px; }
+        .sla-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f5f0e8;
+            line-height: 1;
+        }
+        .sla-num em { font-size: 0.9rem; font-style: italic; }
+        .sla-num.red { color: var(--accent); }
+        .sla-sub {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(245,240,232,0.45);
+            margin-top: 6px;
+        }
+
+        /* ── Footer ────────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-copy { font-size: 0.65rem; letter-spacing: 0.1em; color: var(--muted); }
+        .social-links { display: flex; gap: 20px; list-style: none; }
+        .social-links a {
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .social-links a:hover { color: var(--accent); }
+
+        /* ── Keyframes ─────────────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(1.5); }
+        }
+
+        /* ── Responsive ────────────────────────────────────── */
+        @media (max-width: 800px) {
+            nav { padding: 24px 20px; }
+            .nav-links { display: none; }
+            .hero { grid-template-columns: 1fr; padding: 48px 20px 32px; }
+            .hero-left { border-right: none; padding-right: 0; padding-bottom: 36px; border-bottom: 1px solid var(--line); }
+            .hero-right { padding-left: 0; padding-top: 32px; }
+            .contact-section { grid-template-columns: 1fr; }
+            .form-panel { border-right: none; padding: 40px 20px; }
+            .side-panel { padding: 40px 20px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            footer { flex-direction: column; gap: 16px; padding: 20px; text-align: center; }
+            .stamp { display: none; }
+            .vline { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="vline"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav>
+    <a href="#" class="logo">Tellas<span>Share</span></a>
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Work</a></li>
+        <li><a href="#" class="active">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-left">
+        <div class="stamp">C</div>
+        <p class="hero-label">— Get in touch</p>
+        <h1 class="hero-title">Let's<br>make some<br><em>noise.</em></h1>
+        <p class="hero-desc">We'd love to hear from you. Whether it's a big idea, a small question, or just a hello — drop us a line and we'll be in touch swiftly.</p>
+    </div>
+    <div class="hero-right">
+        <div class="info-block">
+            <p class="info-label">Email Us</p>
+            <a href="mailto:hello@tellasshare.com" class="info-value">hello@tellasshare.com</a>
+        </div>
+        <div class="info-block">
+            <p class="info-label">Call Us</p>
+            <a href="tel:+15550001234" class="info-value">+1 (555) 000 — 1234</a>
+        </div>
+        <div class="info-block">
+            <p class="info-label">Support</p>
+            <span class="info-value" style="cursor:default;">24 / 7 — Always on</span>
+        </div>
+    </div>
+</section>
+
+<!-- ── BODY ─────────────────────────────────────────────────── -->
+<section class="contact-section">
+
+    <!-- Left: Form -->
+    <div class="form-panel">
+        <p class="section-counter">01 — Send a Message</p>
+
+        <div id="formWrap">
+            <div class="form-group">
+                <div class="form-row">
+                    <div>
+                        <label for="fname">First Name</label>
+                        <input type="text" id="fname" placeholder="Jane">
+                    </div>
+                    <div>
+                        <label for="lname">Last Name</label>
+                        <input type="text" id="lname" placeholder="Doe">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="jane@company.com">
+            </div>
+
+            <div class="form-group">
+                <label for="company">Company / Organisation</label>
+                <input type="text" id="company" placeholder="Optional">
+            </div>
+
+            <div class="form-group">
+                <label>I'm interested in</label>
+                <div class="checkbox-group">
+                    <label class="chip" onclick="toggleChip(this)"><input type="checkbox"> Sharing Content</label>
+                    <label class="chip" onclick="toggleChip(this)"><input type="checkbox"> Partnerships</label>
+                    <label class="chip" onclick="toggleChip(this)"><input type="checkbox"> Enterprise Plan</label>
+                    <label class="chip" onclick="toggleChip(this)"><input type="checkbox"> Press &amp; Media</label>
+                    <label class="chip" onclick="toggleChip(this)"><input type="checkbox"> Something Else</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="msg">Your Message</label>
+                <textarea id="msg" placeholder="Tell us what's on your mind…"></textarea>
+            </div>
+
+            <div class="submit-wrap">
+                <button class="btn-submit" onclick="submitForm()">
+                    <span>Send Message</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="success-msg" id="successMsg">
+            <span class="success-icon">✦</span>
+            <h2>Message Received.</h2>
+            <p>Our team is available 24/7 — expect a reply very soon.</p>
+        </div>
+    </div>
+
+    <!-- Right: 24/7 Support -->
+    <div class="side-panel">
+        <div>
+            <p class="section-counter">02 — Always Here</p>
+
+            <div class="support-headline">
+                <span class="support-big">24</span>
+                <div class="support-sub">
+                    <span class="sub-label">Hours a day</span>
+                    <span class="sub-slash">/ 7</span>
+                </div>
+            </div>
+
+            <p class="support-desc">Our support team never sleeps. Whether it's 3am on a Sunday or a bank holiday — we're always on, always available, always ready to help.</p>
+
+            <div class="office-card">
+                <span class="office-tag" style="background:var(--accent2);">Live Chat</span>
+                <p class="office-city">Instant Response</p>
+                <p class="office-addr">Connect with a real human in under 2 minutes. No bots, no queues, no waiting — available directly from your dashboard.</p>
+                <p class="office-hours"><span class="dot"></span> Always online</p>
+            </div>
+
+            <div class="office-card">
+                <span class="office-tag" style="background:var(--accent);">Priority Email</span>
+                <p class="office-city">Under 1 Hour</p>
+                <p class="office-addr">Guaranteed response within 60 minutes, day or night. Critical issues escalated immediately to our senior team.</p>
+                <p class="office-hours"><span class="dot"></span> 24 hrs · 365 days</p>
+            </div>
+        </div>
+
+        <div class="sla-strip">
+            <p class="sla-title">Our SLA Guarantee</p>
+            <div class="sla-grid">
+                <div class="sla-cell">
+                    <p class="sla-num">&lt;2<em>min</em></p>
+                    <p class="sla-sub">First reply</p>
+                </div>
+                <div class="sla-cell">
+                    <p class="sla-num">99<em>%</em></p>
+                    <p class="sla-sub">Uptime SLA</p>
+                </div>
+                <div class="sla-cell">
+                    <p class="sla-num red">24/7</p>
+                    <p class="sla-sub">Coverage</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────────── -->
+<footer>
+    <p class="footer-copy">© 2026 Tellas Share. All rights reserved.</p>
+    <ul class="social-links">
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+    </ul>
+</footer>
+
+<!-- ── JS ───────────────────────────────────────────────────── -->
+<script src="contact.js"></script>
+</body>
+</html>
