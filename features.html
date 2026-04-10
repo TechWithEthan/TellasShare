@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tellas Share | Features</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0b;
+    --ink-2: #1c1c1e;
+    --ink-3: #2e2e32;
+    --mist: #f4f2ed;
+    --mist-2: #e8e5de;
+    --gold: #c9a96e;
+    --gold-light: #e8d5ae;
+    --teal: #3d8c84;
+    --teal-light: #7ec8c0;
+    --accent: #e05a3a;
+    --accent-light: #f0a98a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--ink);
+    color: var(--mist);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(10,10,11,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(201,169,110,0.15);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(244,242,237,0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.55rem 1.4rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 40%, rgba(61,140,132,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,169,110,0.08) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(10,10,11,0) 0%, rgba(10,10,11,0.7) 100%),
+      var(--ink);
+    z-index: 0;
+  }
+  .hero-grid-overlay {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,169,110,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,110,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-eyebrow {
+    position: relative; z-index: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--teal-light);
+  }
+  .hero-headline {
+    position: relative; z-index: 1;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--mist);
+    max-width: 900px;
+    margin-bottom: 2rem;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    position: relative; z-index: 1;
+    font-size: 0.9rem;
+    color: rgba(244,242,237,0.5);
+    max-width: 420px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+  .hero-actions { position: relative; z-index: 1; display: flex; gap: 1rem; align-items: center; }
+  .btn-primary {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 0.85rem 2.2rem;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-ghost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(244,242,237,0.6);
+    background: transparent;
+    padding: 0.85rem 2rem;
+    border: 1px solid rgba(244,242,237,0.15);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: rgba(201,169,110,0.4); color: var(--gold); }
+
+  .hero-scroll-hint {
+    position: absolute; bottom: 2rem; right: 3rem; z-index: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(244,242,237,0.25);
+    writing-mode: vertical-rl;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-scroll-hint::after {
+    content: '';
+    display: block; width: 1px; height: 48px;
+    background: linear-gradient(to bottom, rgba(201,169,110,0.4), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+  /* ── MARQUEE ── */
+  .marquee-section {
+    border-top: 1px solid rgba(201,169,110,0.12);
+    border-bottom: 1px solid rgba(201,169,110,0.12);
+    padding: 1rem 0; overflow: hidden;
+    background: rgba(201,169,110,0.03);
+  }
+  .marquee-track {
+    display: flex; gap: 3rem;
+    animation: marquee 28s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(201,169,110,0.45);
+    display: flex; align-items: center; gap: 1.5rem;
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(201,169,110,0.3); flex-shrink: 0;
+  }
+  @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+  /* ── SECTION BASE ── */
+  .section { padding: 7rem 3rem; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--teal-light); margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(126,200,192,0.2); max-width: 60px; }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 300; line-height: 1.08; color: var(--mist);
+    max-width: 640px; margin-bottom: 1.5rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-body {
+    font-size: 0.88rem; color: rgba(244,242,237,0.5);
+    max-width: 500px; line-height: 1.75; font-weight: 400;
+  }
+
+  /* ── FEATURES GRID ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.1);
+    margin-top: 4rem;
+  }
+  .feat-card {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .feat-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,169,110,0.05) 0%, transparent 70%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .feat-card:hover::before { opacity: 1; }
+  .feat-card:hover { background: rgba(20,20,22,1); }
+  .feat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: rgba(201,169,110,0.3);
+    margin-bottom: 1.75rem;
+    display: block;
+  }
+  .feat-icon-wrap {
+    width: 44px; height: 44px;
+    border: 1px solid rgba(201,169,110,0.2);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  .feat-card:hover .feat-icon-wrap { border-color: rgba(201,169,110,0.5); }
+  .feat-icon-wrap svg { width: 20px; height: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+  .feat-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    color: var(--mist); margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+  .feat-desc {
+    font-size: 0.82rem;
+    color: rgba(244,242,237,0.42);
+    line-height: 1.75; font-weight: 400;
+  }
+  .feat-tag {
+    display: inline-block; margin-top: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(126,200,192,0.25);
+    color: var(--teal-light);
+  }
+  .feat-tag.gold { border-color: rgba(201,169,110,0.25); color: var(--gold); }
+  .feat-tag.accent { border-color: rgba(224,90,58,0.25); color: var(--accent-light); }
+
+  /* ── HIGHLIGHT BAND ── */
+  .highlight-band {
+    margin: 0 3rem;
+    border: 1px solid rgba(201,169,110,0.15);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+  .hb-left {
+    padding: 4rem;
+    background: linear-gradient(135deg, rgba(201,169,110,0.05) 0%, transparent 60%);
+    border-right: 1px solid rgba(201,169,110,0.12);
+  }
+  .hb-stat { margin-bottom: 2.5rem; }
+  .hb-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; font-weight: 300; line-height: 1;
+    color: var(--gold); letter-spacing: -0.02em;
+  }
+  .hb-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(244,242,237,0.35); margin-top: 0.4rem;
+  }
+  .hb-right {
+    padding: 4rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .hb-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300; font-style: italic;
+    line-height: 1.45; color: rgba(244,242,237,0.8); margin-bottom: 2rem;
+  }
+  .hb-attribution {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    color: rgba(244,242,237,0.3);
+  }
+
+  /* ── WORKFLOW ── */
+  .workflow-steps {
+    display: flex; gap: 0; margin-top: 4rem;
+    border: 1px solid rgba(201,169,110,0.1);
+  }
+  .workflow-step {
+    flex: 1; padding: 2.5rem 2rem;
+    border-right: 1px solid rgba(201,169,110,0.1);
+    position: relative;
+    transition: background 0.3s;
+  }
+  .workflow-step:last-child { border-right: none; }
+  .workflow-step:hover { background: rgba(201,169,110,0.03); }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; font-weight: 300;
+    color: rgba(201,169,110,0.12);
+    line-height: 1; margin-bottom: 1.25rem;
+    display: block;
+  }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    color: var(--mist); margin-bottom: 0.65rem;
+  }
+  .step-desc {
+    font-size: 0.8rem;
+    color: rgba(244,242,237,0.4); line-height: 1.7; font-weight: 400;
+  }
+  .step-arrow {
+    position: absolute; right: -13px; top: 50%;
+    transform: translateY(-50%);
+    width: 24px; height: 24px;
+    background: var(--ink);
+    border: 1px solid rgba(201,169,110,0.2);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2; font-size: 10px; color: rgba(201,169,110,0.5);
+  }
+  .workflow-step:last-child .step-arrow { display: none; }
+
+  /* ── PRICING ── */
+  .pricing-strip {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem; margin-top: 4rem;
+  }
+  .plan-card {
+    border: 1px solid rgba(201,169,110,0.1);
+    padding: 2.5rem 2rem;
+    position: relative; transition: border-color 0.3s;
+  }
+  .plan-card:hover { border-color: rgba(201,169,110,0.3); }
+  .plan-card.featured {
+    border-color: rgba(201,169,110,0.5);
+    background: linear-gradient(160deg, rgba(201,169,110,0.04) 0%, transparent 50%);
+  }
+  .plan-badge {
+    position: absolute; top: -1px; left: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--gold); color: var(--ink);
+    padding: 0.25rem 0.75rem;
+  }
+  .plan-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(244,242,237,0.35); margin-bottom: 1rem;
+  }
+  .plan-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300;
+    color: var(--mist); line-height: 1;
+  }
+  .plan-price span {
+    font-size: 1rem; font-family: 'Syne', sans-serif;
+    color: rgba(244,242,237,0.35); font-weight: 400;
+  }
+  .plan-divider {
+    height: 1px; background: rgba(201,169,110,0.1);
+    margin: 1.5rem 0;
+  }
+  .plan-features { list-style: none; }
+  .plan-features li {
+    font-size: 0.8rem; color: rgba(244,242,237,0.5);
+    padding: 0.45rem 0;
+    display: flex; gap: 0.65rem; align-items: flex-start;
+    font-weight: 400;
+    border-bottom: 1px solid rgba(201,169,110,0.05);
+  }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features li::before {
+    content: '—';
+    color: var(--gold); opacity: 0.5; flex-shrink: 0;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; margin-top: 1px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .cta-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(61,140,132,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 30% 70%, rgba(201,169,110,0.06) 0%, transparent 60%);
+  }
+  .cta-section .section-title {
+    max-width: 100%; margin: 0 auto 1.5rem;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+  }
+  .cta-section .section-body { max-width: 500px; margin: 0 auto 3rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(201,169,110,0.1);
+    padding: 2.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600;
+    letter-spacing: 0.08em; color: rgba(201,169,110,0.5);
+  }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em;
+    color: rgba(244,242,237,0.2);
+  }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(244,242,237,0.25); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .section { padding: 5rem 1.5rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .highlight-band { margin: 0 1.5rem; grid-template-columns: 1fr; }
+    .hb-left { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.12); }
+    .workflow-steps { flex-direction: column; }
+    .workflow-step { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.1); }
+    .step-arrow { display: none; }
+    .pricing-strip { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .hero-scroll-hint { display: none; }
+    .cta-section { padding: 5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#">Tellas Share</a>
+  <ul class="nav-links">
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Workflow</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Docs</a></li>
+  </ul>
+  <button class="nav-cta">Get started</button>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-overlay"></div>
+  <p class="hero-eyebrow">Tellas Share — Feature Overview</p>
+  <h1 class="hero-headline">Share anything.<br><em>Effortlessly.</em><br>Beautifully.</h1>
+  <p class="hero-sub">A new standard for collaborative sharing — built for teams who care about precision, security, and the experience of every recipient.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#">Explore features</a>
+    <a class="btn-ghost" href="#">Watch demo</a>
+  </div>
+  <div class="hero-scroll-hint">Scroll</div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>Real-time collaboration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>End-to-end encryption</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Link expiry controls</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Analytics dashboard</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Custom branding</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Audit trails</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Smart compression</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Version history</span>
+    <!-- Duplicate set for seamless loop -->
+    <span class="marquee-item"><span class="marquee-dot"></span>Real-time collaboration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>End-to-end encryption</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Link expiry controls</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Analytics dashboard</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Custom branding</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Audit trails</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Smart compression</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Version history</span>
+  </div>
+</div>
+
+<!-- ── FEATURES ── -->
+<section class="section">
+  <p class="section-label reveal">Core capabilities</p>
+  <h2 class="section-title reveal">Every feature<br><em>earns its place.</em></h2>
+  <p class="section-body reveal">We built Tellas Share around a single belief: every interaction with a shared file should feel considered. No friction, no clutter — just clarity.</p>
+
+  <div class="features-grid">
+
+    <div class="feat-card reveal">
+      <span class="feat-num">01</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      </div>
+      <h3 class="feat-title">Instant file sharing</h3>
+      <p class="feat-desc">Upload and share any file type in under a second. Smart CDN routing ensures lightning delivery to recipients globally.</p>
+      <span class="feat-tag">Core</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">02</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3 class="feat-title">End-to-end encryption</h3>
+      <p class="feat-desc">Files are encrypted before they leave your device. Only the intended recipient can decrypt and view the content.</p>
+      <span class="feat-tag gold">Security</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">03</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3 class="feat-title">Expiring links</h3>
+      <p class="feat-desc">Set precise expiry times — from hours to months. Links auto-revoke, keeping sensitive data from living forever in inboxes.</p>
+      <span class="feat-tag gold">Control</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">04</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3 class="feat-title">Recipient analytics</h3>
+      <p class="feat-desc">Know exactly when your file was opened, for how long, and from where. Real-time insights without the surveillance feeling.</p>
+      <span class="feat-tag">Insights</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">05</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3 class="feat-title">Team workspaces</h3>
+      <p class="feat-desc">Shared vaults for your team with role-based permissions. Everyone sees exactly what they should — nothing more, nothing less.</p>
+      <span class="feat-tag accent">Teams</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">06</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      </div>
+      <h3 class="feat-title">Custom branded pages</h3>
+      <p class="feat-desc">Your logo, your colors, your domain. Every share page looks like it came from your brand, not a third-party service.</p>
+      <span class="feat-tag gold">Branding</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">07</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+      </div>
+      <h3 class="feat-title">Smart compression</h3>
+      <p class="feat-desc">Automatic lossless compression reduces file sizes by up to 70% before upload, without any noticeable quality loss.</p>
+      <span class="feat-tag">Performance</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">08</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4"/><polyline points="17 9 12 4 7 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
+      </div>
+      <h3 class="feat-title">Version history</h3>
+      <p class="feat-desc">Every version of every file, retained and accessible. Roll back to any point, compare changes, and share specific versions.</p>
+      <span class="feat-tag accent">History</span>
+    </div>
+
+    <div class="feat-card reveal">
+      <span class="feat-num">09</span>
+      <div class="feat-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <h3 class="feat-title">Audit trails</h3>
+      <p class="feat-desc">A complete, immutable log of every file action — who viewed, downloaded, or modified what, with timestamps to the second.</p>
+      <span class="feat-tag gold">Compliance</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── HIGHLIGHT BAND ── -->
+<div class="highlight-band reveal">
+  <div class="hb-left">
+    <div class="hb-stat">
+      <div class="hb-stat-num">2.4×</div>
+      <div class="hb-stat-label">faster file delivery vs. alternatives</div>
+    </div>
+    <div class="hb-stat">
+      <div class="hb-stat-num">99.97%</div>
+      <div class="hb-stat-label">uptime guaranteed, globally</div>
+    </div>
+    <div class="hb-stat" style="margin-bottom:0">
+      <div class="hb-stat-num">0 ms</div>
+      <div class="hb-stat-label">encryption overhead felt by users</div>
+    </div>
+  </div>
+  <div class="hb-right">
+    <p class="hb-quote">"Tellas Share is the only tool we use for client deliverables. The attention to recipient experience is unmatched."</p>
+    <div>
+      <div class="hb-attribution" style="margin-bottom:0.25rem">— Meredith Okafor</div>
+      <div class="hb-attribution">Creative Director, Studio Lune</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WORKFLOW ── -->
+<section class="section">
+  <p class="section-label reveal">How it works</p>
+  <h2 class="section-title reveal">From upload<br>to <em>delivered.</em></h2>
+  <p class="section-body reveal">Four steps is all it takes. Tellas Share gets out of the way so you can focus on what you're sharing, not the mechanics of sharing it.</p>
+
+  <div class="workflow-steps">
+    <div class="workflow-step reveal">
+      <span class="step-num">01</span>
+      <h3 class="step-title">Upload your file</h3>
+      <p class="step-desc">Drag and drop any file type. Automatic compression and format optimization happen invisibly in the background.</p>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="workflow-step reveal">
+      <span class="step-num">02</span>
+      <h3 class="step-title">Configure access</h3>
+      <p class="step-desc">Set permissions, expiry dates, password protection, and download limits. One screen, all controls.</p>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="workflow-step reveal">
+      <span class="step-num">03</span>
+      <h3 class="step-title">Share your link</h3>
+      <p class="step-desc">Copy a branded link or send directly via email. Recipients see a beautiful, on-brand experience — no login required.</p>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="workflow-step reveal">
+      <span class="step-num">04</span>
+      <h3 class="step-title">Track engagement</h3>
+      <p class="step-desc">Watch opens and downloads in real time. Get notified the moment your file is viewed. Revoke access instantly if needed.</p>
+      <div class="step-arrow">›</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="section" style="padding-top:0">
+  <p class="section-label reveal">Pricing</p>
+  <h2 class="section-title reveal">Simple pricing,<br><em>no surprises.</em></h2>
+
+  <div class="pricing-strip">
+
+    <div class="plan-card reveal">
+      <p class="plan-name">Starter</p>
+      <div class="plan-price">Free <span>/ forever</span></div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>5 GB storage</li>
+        <li>Up to 10 active links</li>
+        <li>Basic analytics</li>
+        <li>7-day link expiry</li>
+        <li>Tellas branding</li>
+      </ul>
+    </div>
+
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">Most popular</div>
+      <p class="plan-name">Pro</p>
+      <div class="plan-price">$14 <span>/ month</span></div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>100 GB storage</li>
+        <li>Unlimited active links</li>
+        <li>Full analytics suite</li>
+        <li>Custom expiry controls</li>
+        <li>Custom branding + domain</li>
+        <li>Version history (90 days)</li>
+        <li>Priority support</li>
+      </ul>
+    </div>
+
+    <div class="plan-card reveal">
+      <p class="plan-name">Enterprise</p>
+      <div class="plan-price">Custom</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-features">
+        <li>Unlimited storage</li>
+        <li>Team workspaces + SSO</li>
+        <li>Full audit trails</li>
+        <li>SLA guarantee</li>
+        <li>Dedicated account manager</li>
+        <li>Custom integrations</li>
+        <li>Compliance packages</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <p class="section-label reveal" style="justify-content:center">Get started today</p>
+  <h2 class="section-title reveal" style="position:relative">The future of<br><em>sharing is here.</em></h2>
+  <p class="section-body reveal" style="position:relative">Join thousands of teams who've made file sharing a part of their brand experience, not an afterthought.</p>
+  <div class="cta-actions" style="position:relative">
+    <a class="btn-primary" href="#">Start for free</a>
+    <a class="btn-ghost" href="#">Talk to sales</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-logo">Tellas Share</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Security</a>
+    <a href="#">Status</a>
+  </div>
+  <p class="footer-copy">© 2026 Tellas. All rights reserved.</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
