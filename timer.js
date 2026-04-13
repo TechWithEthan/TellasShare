@@ -1,32 +1,32 @@
-// ================= CONFIG =================
-const DEFAULT = {
-  month: 4,   // September (0-based: 0=Jan, 8=Sep)
-  day:   1,  // 1st
-  hour:  0,  // midnight
-  min:   0,
-  sec:   10,
-};
-
 // ================= LAUNCH DATE =================
+// Always targets 12:00 AM (midnight) — start of tomorrow.
 function getLaunchDate() {
-  const saved = localStorage.getItem("launchDate");
-  if (saved) return new Date(saved);
-
   const now = new Date();
   return new Date(
     now.getFullYear(),
-    DEFAULT.month,
-    DEFAULT.day,
-    DEFAULT.hour,
-    DEFAULT.min,
-    DEFAULT.sec
+    now.getMonth(),
+    now.getDate() + 1, // next midnight = start of tomorrow
+    0, 0, 0            // 12:00 AM
   );
 }
 
 let LAUNCH_DATE = getLaunchDate();
 
+// ================= FORMAT dd-mm-yy =================
+function formatDDMMYY(d) {
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yy = String(d.getFullYear()).slice(-2);
+  return `${dd}-${mm}-${yy}`;
+}
+
+// ================= DEVICE CHECK =================
+// Returns true if the user is on a phone or tablet
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
 // ================= BUILD COUNTDOWN HTML =================
-// Runs once on load — creates the 4 flip boxes inside #cdUnits
 function buildCountdownUI() {
   const container = document.getElementById("cdUnits");
   if (!container) return;
@@ -38,10 +38,9 @@ function buildCountdownUI() {
     { id: "cd-secs",  label: "Seconds" },
   ];
 
-  container.innerHTML = ""; // clear any placeholder content
+  container.innerHTML = "";
 
   units.forEach((u, i) => {
-    // Separator colon between units (not after last)
     if (i > 0) {
       const sep = document.createElement("div");
       sep.className = "cd-sep";
@@ -65,13 +64,25 @@ function buildCountdownUI() {
 
 // ================= UPDATE COUNTDOWN =================
 function updateCountdown() {
-  const now  = new Date();
+  const now = new Date();
+  LAUNCH_DATE = getLaunchDate(); // recalculate every tick — live rollover at midnight
+
+  // Optional: update a date display element — add <span id="cd-date"></span> in your HTML
+  const dateEl = document.getElementById("cd-date");
+  if (dateEl) dateEl.textContent = formatDDMMYY(LAUNCH_DATE);
+
   const diff = LAUNCH_DATE - now;
 
   if (diff <= 0) {
-    const container = document.getElementById("cdUnits");
-    if (container) {
-      container.innerHTML = '<div class="cd-launched">🚀 We\'ve launched!</div>';
+    if (!isMobileDevice()) {
+      // Desktop: redirect to homepage
+      window.location.href = "homepage for Computer.html";
+    } else {
+      // Phone/tablet: stay on page — show coming soon message
+      const container = document.getElementById("cdUnits");
+      if (container) {
+        container.innerHTML = '<div class="cd-launched">🚀 We\'ve launched! Mobile coming soon.</div>';
+      }
     }
     return;
   }
@@ -100,8 +111,6 @@ function setDigit(id, newValue) {
     el.textContent = newValue;
     el.classList.remove("flip-out");
     el.classList.add("flip-in");
-
-    // Clean up flip-in after it plays
     setTimeout(() => el.classList.remove("flip-in"), 300);
   }, 150);
 }
@@ -109,18 +118,6 @@ function setDigit(id, newValue) {
 // ================= HELPERS =================
 function pad(n) {
   return String(n).padStart(2, "0");
-}
-
-// Optional: exposed helpers for console/admin use
-function setLaunch(dateValue) {
-  if (!dateValue) return;
-  localStorage.setItem("launchDate", dateValue);
-  LAUNCH_DATE = new Date(dateValue);
-}
-
-function resetLaunch() {
-  localStorage.removeItem("launchDate");
-  LAUNCH_DATE = getLaunchDate();
 }
 
 // ================= INIT =================
