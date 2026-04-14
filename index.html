@@ -5,32 +5,477 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TellasShare — Coming Soon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link rel="icon" href="images/TellasShare.png" type="image/x-icon">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="animations.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    :root {
+      --green-deep: #1a3a1f;
+      --green-mid: #2d6a31;
+      --green-bright: #4a9e50;
+      --green-light: #7cca82;
+      --green-pale: #d4f0d6;
+      --cream: #f5f0e8;
+      --warm-white: #faf8f4;
+      --text-dark: #1a1a18;
+      --text-mid: #3d4a3e;
+      --text-muted: #7a8a7b;
+      --gold: #c9a84c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--green-deep);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── BACKGROUND ─── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .bg::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 70vw;
+      height: 70vw;
+      background: radial-gradient(ellipse, rgba(74,158,80,0.18) 0%, transparent 65%);
+      border-radius: 50%;
+    }
+    .bg::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -15%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(ellipse, rgba(45,106,49,0.22) 0%, transparent 65%);
+      border-radius: 50%;
+    }
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ─── LEAF DECORATIONS ─── */
+    .leaf-deco {
+      position: fixed;
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 8%;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.3px;
+    }
+    .nav-logo span { color: var(--green-light); }
+
+    /* ─── HERO ─── */
+    .upcoming-hero {
+      position: relative;
+      z-index: 5;
+      padding: 60px 8% 80px;
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(74,158,80,0.15);
+      border: 1px solid rgba(124,202,130,0.35);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green-light);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-light);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 7vw, 72px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--cream);
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+    .gradient-text {
+      color: var(--green-light);
+      font-style: italic;
+    }
+
+    .typing-wrap {
+      font-size: 18px;
+      color: var(--text-muted);
+      min-height: 28px;
+      margin-bottom: 48px;
+      font-weight: 300;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      background: var(--green-light);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ─── COUNTDOWN ─── */
+    .countdown {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 52px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cd-unit {
+      text-align: center;
+      min-width: 80px;
+    }
+    .cd-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 10px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      min-width: 72px;
+    }
+    .cd-digit {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1;
+    }
+    .cd-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .cd-sep {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: rgba(255,255,255,0.2);
+      padding: 0 6px;
+      margin-bottom: 24px;
+      line-height: 1;
+      align-self: flex-start;
+      margin-top: 14px;
+    }
+    .cd-launched {
+      font-size: 18px;
+      color: var(--green-light);
+    }
+
+    /* Flip animation */
+    @keyframes flipOut {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-50%); opacity: 0; }
+    }
+    @keyframes flipIn {
+      from { transform: translateY(50%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .flip-out { animation: flipOut 0.15s ease forwards; }
+    .flip-in { animation: flipIn 0.15s ease forwards; }
+
+    /* ─── NOTIFY ─── */
+    .notify-wrap { margin-bottom: 44px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .notify-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .notify-form {
+      display: flex;
+      gap: 10px;
+      max-width: 420px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .notify-input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .notify-input::placeholder { color: rgba(255,255,255,0.3); }
+    .notify-input:focus { border-color: var(--green-bright); }
+    .btn-primary {
+      background: var(--green-bright);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--green-light); }
+    .btn-primary:active { transform: scale(0.97); }
+    .notify-success {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--green-light);
+      padding: 10px 0;
+    }
+    .notify-error {
+      font-size: 13px;
+      color: #e07070;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    /* ─── PILLS ─── */
+    .pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 7px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 400;
+    }
+    .pill svg { opacity: 0.7; }
+
+    /* ─── ROADMAP ─── */
+    .roadmap {
+      position: relative;
+      z-index: 5;
+      padding: 80px 8%;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(4px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--green-light);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 52px;
+      letter-spacing: -0.5px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 560px;
+      width: 100%;
+      text-align: left;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 9px;
+      top: 22px;
+      bottom: -1px;
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    .timeline-item:last-child::before { display: none; }
+
+    .tl-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 2px solid;
+      z-index: 1;
+    }
+    .done-dot { background: var(--green-bright); border-color: var(--green-bright); }
+    .active-dot {
+      background: rgba(74,158,80,0.2);
+      border-color: var(--green-light);
+      box-shadow: 0 0 0 4px rgba(124,202,130,0.15);
+      animation: activePulse 2.5s infinite;
+    }
+    @keyframes activePulse {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(124,202,130,0.15); }
+      50% { box-shadow: 0 0 0 8px rgba(124,202,130,0.05); }
+    }
+    .upcoming-dot { background: transparent; border-color: rgba(255,255,255,0.2); }
+
+    .tl-content {
+      padding-bottom: 36px;
+    }
+    .tl-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .done-tag { background: rgba(74,158,80,0.2); color: var(--green-light); }
+    .active-tag { background: rgba(201,168,76,0.2); color: var(--gold); }
+    .upcoming-tag { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); }
+
+    .tl-content h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+    .tl-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      position: relative;
+      z-index: 5;
+      padding: 40px 8%;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+    .footer-logo span { color: var(--green-light); }
+    .footer p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .footer-copy { margin-top: 12px; font-size: 12px; opacity: 0.5; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .upcoming-hero { padding: 40px 6% 60px; }
+      .roadmap { padding: 60px 6%; }
+      .cd-digit { font-size: 28px; }
+      .cd-box { min-width: 58px; padding: 12px 8px; }
+      .cd-unit { min-width: 64px; }
+    }
+  </style>
 </head>
 <body>
 
 <!-- Background -->
 <div class="bg">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
+  <div class="bg-grid"></div>
 </div>
 
-<svg class="leaf-deco" style="top:10%;right:5%;width:180px;" viewBox="0 0 100 120" fill="#2d6e28">
-  <path d="M50 5 C80 20 95 60 50 115 C5 60 20 20 50 5Z"/>
+<!-- Leaf decorations -->
+<svg class="leaf-deco" style="top:8%;right:4%;width:200px;" viewBox="0 0 100 120" fill="none">
+  <path d="M50 5 C80 20 95 60 50 115 C5 60 20 20 50 5Z" fill="#4a9e50"/>
 </svg>
-<svg class="leaf-deco" style="bottom:20%;left:3%;width:120px;transform:rotate(30deg)" viewBox="0 0 100 120" fill="#2d6e28">
-  <path d="M50 5 C80 20 95 60 50 115 C5 60 20 20 50 5Z"/>
+<svg class="leaf-deco" style="bottom:18%;left:2%;width:130px;transform:rotate(25deg)" viewBox="0 0 100 120" fill="none">
+  <path d="M50 5 C80 20 95 60 50 115 C5 60 20 20 50 5Z" fill="#4a9e50"/>
+</svg>
+<svg class="leaf-deco" style="top:45%;right:1%;width:90px;transform:rotate(-15deg);opacity:0.07" viewBox="0 0 100 120" fill="none">
+  <path d="M50 5 C80 20 95 60 50 115 C5 60 20 20 50 5Z" fill="#7cca82"/>
 </svg>
 
 <!-- Nav -->
 <nav class="nav">
   <div class="nav-logo">Tellas<span>Share</span></div>
-  <div class="nav-links">
-  </div>
+  <div class="nav-links"></div>
 </nav>
 
 <!-- Hero -->
@@ -38,14 +483,12 @@
   <div class="badge"><span class="badge-dot"></span> Launching Soon</div>
   <h1 class="hero-title">Something <span class="gradient-text">green</span><br>is coming</h1>
 
-  <!-- Typing effect -->
   <div class="typing-wrap">
     <span id="typed"></span><span class="cursor-blink"></span>
   </div>
 
   <!-- Countdown -->
-  <div class="countdown" id="cdUnits">
-  </div>
+  <div class="countdown" id="cdUnits"></div>
 
   <!-- Notify form -->
   <div class="notify-wrap">
@@ -55,13 +498,13 @@
       <button class="btn-primary" onclick="submitNotify()">Notify Me</button>
     </div>
     <div class="notify-success" id="notifySuccess">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a8c3f" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
       You're on the list — we'll reach out soon!
     </div>
     <div class="notify-error" id="notifyError"></div>
   </div>
 
-  <!-- Feature pills -->
+  <!-- Pills -->
   <div class="pills">
     <div class="pill">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -137,14 +580,162 @@
   <p class="footer-copy">© 2025 TellasShare. All rights reserved.</p>
 </footer>
 
-<script src="timer.js"></script>
-<script src="upcoming.js"></script>
-<script src="animation.js"></script>
-<script src="apple- device-blocker.js"></script>
-<script src="protection.js"></script>
+<script>
+// ─── TIMER ───
+function getLaunchDate() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+}
+let LAUNCH_DATE = getLaunchDate();
+
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+function buildCountdownUI() {
+  const container = document.getElementById("cdUnits");
+  if (!container) return;
+  const units = [
+    { id: "cd-days",  label: "Days" },
+    { id: "cd-hours", label: "Hours" },
+    { id: "cd-mins",  label: "Minutes" },
+    { id: "cd-secs",  label: "Seconds" },
+  ];
+  container.innerHTML = "";
+  units.forEach((u, i) => {
+    if (i > 0) {
+      const sep = document.createElement("div");
+      sep.className = "cd-sep";
+      sep.textContent = ":";
+      container.appendChild(sep);
+    }
+    const unit = document.createElement("div");
+    unit.className = "cd-unit";
+    unit.innerHTML = `
+      <div class="cd-box">
+        <div class="cd-track">
+          <div class="cd-digit" id="${u.id}">00</div>
+        </div>
+      </div>
+      <div class="cd-label">${u.label}</div>
+    `;
+    container.appendChild(unit);
+  });
+}
+
+function pad(n) { return String(n).padStart(2, "0"); }
+
+function setDigit(id, newValue) {
+  const el = document.getElementById(id);
+  if (!el || el.textContent === newValue) return;
+  el.classList.add("flip-out");
+  setTimeout(() => {
+    el.textContent = newValue;
+    el.classList.remove("flip-out");
+    el.classList.add("flip-in");
+    setTimeout(() => el.classList.remove("flip-in"), 300);
+  }, 150);
+}
+
+function updateCountdown() {
+  const now = new Date();
+  LAUNCH_DATE = getLaunchDate();
+  const diff = LAUNCH_DATE - now;
+  if (diff <= 0) {
+    if (!isMobileDevice()) {
+      window.location.href = "homepage for Computer.html";
+    } else {
+      const c = document.getElementById("cdUnits");
+      if (c) c.innerHTML = '<div class="cd-launched">🚀 We\'ve launched! Mobile coming soon.</div>';
+    }
+    return;
+  }
+  setDigit("cd-days",  pad(Math.floor(diff / (1000 * 60 * 60 * 24))));
+  setDigit("cd-hours", pad(Math.floor((diff / (1000 * 60 * 60)) % 24)));
+  setDigit("cd-mins",  pad(Math.floor((diff / (1000 * 60)) % 60)));
+  setDigit("cd-secs",  pad(Math.floor((diff / 1000) % 60)));
+}
+
+// ─── NOTIFY ───
+async function submitNotify() {
+  const emailInput = document.getElementById('emailInput');
+  const errorEl    = document.getElementById('notifyError');
+  const successEl  = document.getElementById('notifySuccess');
+  const formEl     = document.getElementById('notifyForm');
+  if (!emailInput || !errorEl || !successEl || !formEl) return;
+  const email = emailInput.value.trim();
+  errorEl.textContent = '';
+  if (!email || !email.includes('@')) {
+    errorEl.textContent = 'Please enter a valid email address.';
+    return;
+  }
+  try {
+    // Simulating success — replace with real API call when backend is ready
+    const fakeSuccess = true;
+    if (fakeSuccess) {
+      formEl.style.display = 'none';
+      successEl.style.display = 'flex';
+      return;
+    }
+    const res  = await fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      formEl.style.display    = 'none';
+      successEl.style.display = 'flex';
+    } else {
+      errorEl.textContent = data.message || 'Something went wrong.';
+    }
+  } catch {
+    errorEl.textContent = 'Network error. Please try again.';
+  }
+}
+
+// ─── TYPING ───
+const PHRASES = [
+  'Share files. Save the planet.',
+  'Encrypted. Sustainable. Trusted.',
+  'Your circle. Your privacy.',
+  'Green sharing for a greener future.',
+];
+let phraseIndex = 0, charIndex = 0, isDeleting = false;
+
+function type() {
+  const typedEl = document.getElementById('typed');
+  if (!typedEl) return;
+  const current = PHRASES[phraseIndex];
+  charIndex += isDeleting ? -1 : 1;
+  typedEl.textContent = current.substring(0, charIndex);
+  let delay = isDeleting ? 50 : 90;
+  if (!isDeleting && charIndex === current.length) {
+    delay = 2000; isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    phraseIndex = (phraseIndex + 1) % PHRASES.length;
+    delay = 400;
+  }
+  setTimeout(type, delay);
+}
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  buildCountdownUI();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  type();
+
+  const emailInput = document.getElementById('emailInput');
+  if (emailInput) {
+    emailInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); submitNotify(); }
+    });
+  }
+});
+</script>
 <script src="block-source-access.js"></script>
-<script src="notify.js"></script>
-
-
+<script src="apple- device-blocker.js"></script>
 </body>
 </html>
