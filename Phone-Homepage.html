@@ -3,203 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TellasShare</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="Phone-Homepage.css">
+<title>QuickShare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link rel="stylesheet" href="upload.css">
+  <link rel="icon" href="images/TellasShare.png" type="image/x-icon">
+
 </head>
 <body>
-<div class="phone" id="phone">
+<div class="top-bar"></div>
+<div class="toast-wrap" id="toastWrap"></div>
 
-  <!-- HOME -->
-  <div class="scroll-area" id="homeScreen">
-    <div class="status-bar">
-      <span id="clockEl">9:41</span>
-      <div style="display:flex;gap:5px;align-items:center;font-size:11px"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div>
-    </div>
-    <div class="header">
-      <div class="logo">TellasShare</div>
-      <div class="header-icons">
-        <div class="icon-btn" id="notifBtn"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="notif-dot" id="notifDot"></span></div>
-        <div class="icon-btn" id="headerProfileBtn"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></div>
+<!-- APP -->
+<div class="wrap" id="app">
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <h1><span class="q">Quick</span><span class="slash">/</span><span class="s">Share</span></h1>
+        <div class="sub">Instant local content sharing</div>
+      </div>
+      <div class="header-tag">
+        <div class="pill pill-v">v2.0</div><br>
+        <div class="pill pill-ns">no server</div><br>
+        <div class="pill pill-p">100% private</div>
       </div>
     </div>
-    <div class="hero">
-      <div class="planet-wrap"><div class="planet"></div></div>
-      <div class="hero-label">Explore the universe</div>
-      <div class="hero-title">Share Beyond<br><span class="highlight">Boundaries</span></div>
-      <div class="hero-desc">Connect, collaborate &amp; share across galaxies of possibility.</div>
-      <div class="hero-actions">
-        <button class="btn-primary" id="getStartedBtn">Get Started</button>
-        <button class="btn-secondary" id="watchIntroBtn"><div class="play-icon"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div>Watch intro</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('text',this)">📝 Text</button>
+    <button class="tab-btn" onclick="switchTab('code',this)">💻 Code</button>
+    <button class="tab-btn" onclick="switchTab('file',this)">📁 File</button>
+  </div>
+
+  <!-- TEXT -->
+  <div class="panel active" id="panel-text">
+    <div class="card">
+      <div class="card-label">Plain text</div>
+      <textarea id="textInput" placeholder="Paste or type your text here…" oninput="countChars('textInput','textCt')"></textarea>
+      <div class="input-footer"><span class="char-ct" id="textCt">0 chars</span></div>
+      <div class="expiry-row">
+        <label>Expires:</label>
+        <select class="expiry-select" id="textExp">
+          <option value="0">Never</option>
+          <option value="3600000">1 hour</option>
+          <option value="86400000" selected>24 hours</option>
+          <option value="604800000">7 days</option>
+        </select>
       </div>
+      <button class="btn" onclick="doShare('text')">Generate Share Link →</button>
     </div>
-    <div class="stats">
-      <div class="stat-item"><span class="stat-value">4.2M</span><span class="stat-label">Users</span></div>
-      <div class="stat-item"><span class="stat-value">98%</span><span class="stat-label">Uptime</span></div>
-      <div class="stat-item"><span class="stat-value">180+</span><span class="stat-label">Countries</span></div>
-    </div>
-    <div class="section">
-      <div class="section-header"><span class="section-title">Featured Spaces</span><button class="see-all" id="seeAllBtn">See all</button></div>
-      <div class="spaces-row">
-        <div class="space-card purple" data-space="nova"><div class="space-icon pi">🚀</div><div class="space-badge live">Live</div><div class="space-name">Nova Studio</div><div class="space-members">3.2k members</div></div>
-        <div class="space-card green" data-space="deep"><div class="space-icon gi">🌌</div><div class="space-badge new">New</div><div class="space-name">Deep Space</div><div class="space-members">1.4k members</div></div>
-        <div class="space-card purple" data-space="pulse" style="opacity:.75"><div class="space-icon pi">⚡</div><div class="space-badge new">New</div><div class="space-name">Pulse</div><div class="space-members">890 members</div></div>
+    <div class="link-out" id="lo-text">
+      <div class="lo-label"><span class="lo-dot"></span>Link ready</div>
+      <div class="lo-row">
+        <div class="lo-url" id="lu-text"></div>
+        <button class="copy-btn" id="cb-text" onclick="copyLinkById('lu-text','cb-text')">Copy</button>
       </div>
+      <span class="qr-toggle" onclick="toggleQR('qr-text','lu-text',this)">Show QR code ↓</span>
+      <div class="qr-wrap" id="qr-text"><div id="qr-canvas-text"></div><div class="qr-hint">Scan to open on mobile</div></div>
     </div>
-    <div class="section" style="padding-bottom:10px">
-      <div class="section-header"><span class="section-title">Live Activity</span><button class="see-all" id="viewAllBtn">View all</button></div>
-      <div class="activity-list">
-        <div class="activity-item" data-user="Aria Kim"><div class="avatar av-ak">AK</div><div class="activity-info"><div class="activity-name">Aria Kim</div><div class="activity-action">Shared a new constellation map</div></div><div class="activity-time">2m</div></div>
-        <div class="activity-item" data-user="Orion T."><div class="avatar av-ot">OT</div><div class="activity-info"><div class="activity-name">Orion T.</div><div class="activity-action">Joined Deep Space</div></div><div class="activity-time">5m</div></div>
-        <div class="activity-item" data-user="Luna Vex"><div class="avatar av-lv">LV</div><div class="activity-info"><div class="activity-name">Luna Vex</div><div class="activity-action">Posted in Nova Studio</div></div><div class="activity-time">9m</div></div>
+  </div>
+
+  <!-- CODE -->
+  <div class="panel" id="panel-code">
+    <div class="card">
+      <div class="card-label">Source code</div>
+      <textarea class="code-ta" id="codeInput" placeholder="// paste code here…" oninput="countChars('codeInput','codeCt')"></textarea>
+      <div class="input-footer"><span class="char-ct" id="codeCt">0 chars</span></div>
+      <div class="expiry-row">
+        <label>Expires:</label>
+        <select class="expiry-select" id="codeExp">
+          <option value="0">Never</option>
+          <option value="3600000">1 hour</option>
+          <option value="86400000" selected>24 hours</option>
+          <option value="604800000">7 days</option>
+        </select>
       </div>
+      <button class="btn" onclick="doShare('code')">Generate Share Link →</button>
     </div>
-  </div>
-
-  <!-- EXPLORE -->
-  <div class="screen" id="exploreScreen">
-    <div class="screen-header"><div class="back-btn" data-back="home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="screen-title">Explore</span></div>
-    <div class="explore-grid">
-      <div class="explore-card ec-pu" data-space="nova"><span class="ec-icon">🚀</span><div class="ec-name">Nova Studio</div><div class="ec-count">3.2k members</div></div>
-      <div class="explore-card ec-gr" data-space="deep"><span class="ec-icon">🌌</span><div class="ec-name">Deep Space</div><div class="ec-count">1.4k members</div></div>
-      <div class="explore-card ec-bl" data-space="pulse"><span class="ec-icon">⚡</span><div class="ec-name">Pulse</div><div class="ec-count">890 members</div></div>
-      <div class="explore-card ec-re" data-space="nova"><span class="ec-icon">🔥</span><div class="ec-name">Inferno</div><div class="ec-count">2.1k members</div></div>
-      <div class="explore-card ec-or" data-space="deep"><span class="ec-icon">🌅</span><div class="ec-name">Aurora</div><div class="ec-count">750 members</div></div>
-      <div class="explore-card ec-te" data-space="pulse"><span class="ec-icon">🌊</span><div class="ec-name">Oceanic</div><div class="ec-count">1.9k members</div></div>
-    </div>
-  </div>
-
-  <!-- MESSAGES -->
-  <div class="screen" id="messagesScreen">
-    <div class="screen-header"><div class="back-btn" data-back="home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="screen-title">Messages</span></div>
-    <div class="msg-list">
-      <div class="msg-item" data-msg="Aria Kim"><div class="msg-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">AK<span class="online-dot"></span></div><div class="msg-info"><div class="msg-name">Aria Kim</div><div class="msg-preview">Check out my new constellation map! 🌟</div></div><div class="msg-meta"><div class="msg-time">2m</div><div class="msg-badge">3</div></div></div>
-      <div class="msg-item" data-msg="Orion T."><div class="msg-avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6)">OT</div><div class="msg-info"><div class="msg-name">Orion T.</div><div class="msg-preview">Just joined Deep Space, it's amazing!</div></div><div class="msg-meta"><div class="msg-time">5m</div></div></div>
-      <div class="msg-item" data-msg="Luna Vex"><div class="msg-avatar" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">LV<span class="online-dot"></span></div><div class="msg-info"><div class="msg-name">Luna Vex</div><div class="msg-preview">Nova Studio session starting soon 🚀</div></div><div class="msg-meta"><div class="msg-time">9m</div><div class="msg-badge">1</div></div></div>
-      <div class="msg-item" data-msg="Nova Studio"><div class="msg-avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">NS</div><div class="msg-info"><div class="msg-name">Nova Studio</div><div class="msg-preview">New collaboration posted by @cosmos…</div></div><div class="msg-meta"><div class="msg-time">1h</div></div></div>
-      <div class="msg-item" data-msg="Deep Space"><div class="msg-avatar" style="background:linear-gradient(135deg,#0f3d25,#10b981)">DS</div><div class="msg-info"><div class="msg-name">Deep Space</div><div class="msg-preview">Welcome to 1,400 members! 🎉</div></div><div class="msg-meta"><div class="msg-time">3h</div></div></div>
-    </div>
-  </div>
-
-  <!-- PROFILE -->
-  <div class="screen" id="profileScreen">
-    <div class="screen-header"><div class="back-btn" data-back="home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="screen-title">Profile</span></div>
-    <div class="profile-hero">
-      <div class="profile-avatar-big" id="profileAvatar">YO</div>
-      <div class="profile-name" id="profileName">Your Name</div>
-      <div class="profile-handle">@your_handle · Explorer</div>
-      <div class="profile-stats">
-        <div class="ps-item"><span class="ps-val">142</span><span class="ps-lbl">Posts</span></div>
-        <div class="ps-item"><span class="ps-val">4.8k</span><span class="ps-lbl">Followers</span></div>
-        <div class="ps-item"><span class="ps-val">310</span><span class="ps-lbl">Following</span></div>
+    <div class="link-out" id="lo-code">
+      <div class="lo-label"><span class="lo-dot"></span>Link ready</div>
+      <div class="lo-row">
+        <div class="lo-url" id="lu-code"></div>
+        <button class="copy-btn" id="cb-code" onclick="copyLinkById('lu-code','cb-code')">Copy</button>
       </div>
-    </div>
-    <div class="profile-menu">
-      <div class="pmenu-item" id="editProfileBtn"><div class="pmenu-icon" style="background:rgba(168,85,247,0.15)">✏️</div><span class="pmenu-label">Edit Profile</span><span class="pmenu-arrow">›</span></div>
-      <div class="pmenu-item" id="mySpacesBtn"><div class="pmenu-icon" style="background:rgba(34,197,94,0.12)">🚀</div><span class="pmenu-label">My Spaces</span><span class="pmenu-arrow">›</span></div>
-      <div class="pmenu-item" id="savedBtn"><div class="pmenu-icon" style="background:rgba(59,130,246,0.12)">🔖</div><span class="pmenu-label">Saved</span><span class="pmenu-arrow">›</span></div>
-      <div class="pmenu-item" id="settingsBtn"><div class="pmenu-icon" style="background:rgba(107,107,138,0.15)">⚙️</div><span class="pmenu-label">Settings</span><span class="pmenu-arrow">›</span></div>
-      <div class="pmenu-item" id="signOutBtn"><div class="pmenu-icon" style="background:rgba(239,68,68,0.12)">🚪</div><span class="pmenu-label">Sign Out</span><span class="pmenu-arrow">›</span></div>
+      <span class="qr-toggle" onclick="toggleQR('qr-code','lu-code',this)">Show QR code ↓</span>
+      <div class="qr-wrap" id="qr-code"><div id="qr-canvas-code"></div><div class="qr-hint">Scan to open on mobile</div></div>
     </div>
   </div>
 
-  <!-- NOTIFICATIONS -->
-  <div class="screen" id="notifScreen">
-    <div class="screen-header"><div class="back-btn" data-back="home"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="screen-title">Notifications</span></div>
-    <div class="notif-list">
-      <div class="notif-item unread"><div class="notif-icon" style="background:rgba(168,85,247,0.15)">🚀</div><div><div class="notif-text"><span>Nova Studio</span> went live — join now!</div><div class="notif-ago">Just now</div></div></div>
-      <div class="notif-item unread"><div class="notif-icon" style="background:rgba(245,158,11,0.12)">👤</div><div><div class="notif-text"><span>Aria Kim</span> started following you</div><div class="notif-ago">2 minutes ago</div></div></div>
-      <div class="notif-item unread"><div class="notif-icon" style="background:rgba(34,197,94,0.12)">💬</div><div><div class="notif-text"><span>Orion T.</span> replied to your post</div><div class="notif-ago">5 minutes ago</div></div></div>
-      <div class="notif-item"><div class="notif-icon" style="background:rgba(59,130,246,0.12)">⭐</div><div><div class="notif-text"><span>Luna Vex</span> liked your map</div><div class="notif-ago">14 minutes ago</div></div></div>
-      <div class="notif-item"><div class="notif-icon" style="background:rgba(168,85,247,0.12)">🌌</div><div><div class="notif-text"><span>Deep Space</span> reached 1,400 members!</div><div class="notif-ago">1 hour ago</div></div></div>
-      <div class="notif-item"><div class="notif-icon" style="background:rgba(239,68,68,0.12)">🔥</div><div><div class="notif-text">Your post is trending in <span>Nova Studio</span></div><div class="notif-ago">3 hours ago</div></div></div>
+  <!-- FILE -->
+  <div class="panel" id="panel-file">
+    <div class="card">
+      <div class="card-label">File upload</div>
+      <div class="drop-zone" id="dropZone"
+           ondragover="event.preventDefault();this.classList.add('over')"
+           ondragleave="this.classList.remove('over')"
+           ondrop="onFileDrop(event)">
+        <input type="file" id="fileInput" onchange="onFileChange()">
+        <span class="drop-ico">🗂️</span>
+        <div class="drop-txt"><strong>Click to browse</strong> or drag &amp; drop</div>
+        <div class="drop-hint">Stored in your browser — stays private</div>
+      </div>
+      <div class="file-pill" id="filePill">
+        <span>📄</span>
+        <span class="fp-name" id="fpName"></span>
+        <span class="fp-size" id="fpSize"></span>
+      </div>
+      <div class="expiry-row">
+        <label>Expires:</label>
+        <select class="expiry-select" id="fileExp">
+          <option value="0">Never</option>
+          <option value="3600000">1 hour</option>
+          <option value="86400000" selected>24 hours</option>
+          <option value="604800000">7 days</option>
+        </select>
+      </div>
+      <button class="btn" id="fileBtn" onclick="doShareFile()" disabled>Generate Share Link →</button>
+    </div>
+    <div class="link-out" id="lo-file">
+      <div class="lo-label"><span class="lo-dot"></span>Link ready</div>
+      <div class="lo-row">
+        <div class="lo-url" id="lu-file"></div>
+        <button class="copy-btn" id="cb-file" onclick="copyLinkById('lu-file','cb-file')">Copy</button>
+      </div>
+      <span class="qr-toggle" onclick="toggleQR('qr-file','lu-file',this)">Show QR code ↓</span>
+      <div class="qr-wrap" id="qr-file"><div id="qr-canvas-file"></div><div class="qr-hint">Scan to open on mobile</div></div>
     </div>
   </div>
-
-  <!-- SPACE DETAIL -->
-  <div class="screen" id="spaceDetailScreen">
-    <div class="screen-header" style="padding-top:16px"><div class="back-btn" id="spaceBackBtn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><span class="screen-title" id="sdTitle">Space</span></div>
-    <div class="space-detail-banner" id="sdBanner"></div>
-    <div class="space-detail-info">
-      <div class="space-detail-name" id="sdName"></div>
-      <div class="space-detail-meta" id="sdMeta"></div>
-      <div class="space-detail-desc" id="sdDesc"></div>
-    </div>
-    <button class="join-btn" id="joinBtn">Join Space</button>
-    <div style="padding:14px 20px 0"><div class="section-title" style="margin-bottom:10px">Recent Posts</div><div class="activity-list" id="sdPosts"></div></div>
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <div class="bottom-nav">
-    <div class="nav-item active" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
-    <div class="nav-item" data-nav="explore"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Explore</span></div>
-    <div class="nav-fab" id="fabBtn"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-    <div class="nav-item" data-nav="messages"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Messages</span></div>
-    <div class="nav-item" data-nav="profile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg><span>Profile</span></div>
-  </div>
-
-  <!-- FAB MENU -->
-  <div class="fab-menu" id="fabMenu">
-    <div class="fab-option" id="fabShare"><div class="fab-option-icon">📤</div><span class="fab-option-label">Share something</span></div>
-    <div class="fab-option" id="fabCreate"><div class="fab-option-icon">✨</div><span class="fab-option-label">Create a Space</span></div>
-    <div class="fab-option" id="fabInvite"><div class="fab-option-icon">👥</div><span class="fab-option-label">Invite friends</span></div>
-  </div>
-
-  <!-- MODALS -->
-  <div class="modal-overlay" id="modalGetStarted">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Create your account</div><div class="modal-sub">Join millions exploring the universe. Free forever.</div>
-    <input class="modal-input" type="text" placeholder="Your name" id="signupName">
-    <input class="modal-input" type="email" placeholder="Email address">
-    <input class="modal-input" type="password" placeholder="Password">
-    <button class="modal-btn" id="signupBtn">Create Account →</button>
-    <button class="modal-btn outline" id="closeGetStarted">Maybe later</button></div>
-  </div>
-
-  <div class="modal-overlay" id="modalWatchIntro">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Welcome to TellasShare</div><div class="modal-sub">A quick look at what makes us different.</div>
-    <div class="video-container"><div class="video-thumb"><span style="font-size:48px">🪐</span><div class="video-play-big" id="videoPlayBtn"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></div></div></div>
-    <button class="modal-btn" id="closeWatchIntro">Got it, let's go! 🚀</button></div>
-  </div>
-
-  <div class="modal-overlay" id="modalShare">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Share something</div><div class="modal-sub">What's on your mind?</div>
-    <textarea class="modal-input" rows="4" placeholder="What's happening in your universe?" style="resize:none;height:90px;padding-top:12px"></textarea>
-    <button class="modal-btn" id="sharePostBtn">Post to Universe 🚀</button>
-    <button class="modal-btn outline" id="closeShare">Cancel</button></div>
-  </div>
-
-  <div class="modal-overlay" id="modalCreate">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Create a Space</div><div class="modal-sub">Bring your community together.</div>
-    <input class="modal-input" type="text" placeholder="Space name">
-    <input class="modal-input" type="text" placeholder="Description (optional)">
-    <button class="modal-btn" id="createSpaceBtn">Create Space ✨</button>
-    <button class="modal-btn outline" id="closeCreate">Cancel</button></div>
-  </div>
-
-  <div class="modal-overlay" id="modalInvite">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Invite Friends</div><div class="modal-sub">Share TellasShare with people you know.</div>
-    <input class="modal-input" type="text" placeholder="Email or username">
-    <button class="modal-btn" id="sendInviteBtn">Send Invite 👥</button>
-    <button class="modal-btn outline" id="closeInvite">Cancel</button></div>
-  </div>
-
-  <div class="modal-overlay" id="modalEditProfile">
-    <div class="modal-sheet"><div class="modal-pill"></div><div class="modal-title">Edit Profile</div>
-    <input class="modal-input" type="text" placeholder="Display name" id="editName" value="Your Name">
-    <input class="modal-input" type="text" placeholder="Handle" value="your_handle">
-    <input class="modal-input" type="text" placeholder="Bio">
-    <button class="modal-btn" id="saveProfileBtn">Save Changes</button>
-    <button class="modal-btn outline" id="closeEditProfile">Cancel</button></div>
-  </div>
-
-  <div class="toast" id="toast"></div>
 </div>
 
-<script src="Phone-Homepage.js"></script>
-<script src="protection.js"></script>
-<script src="device-block.js"></script>
-<script src="animation.js"></script>
-<script src="apple- device-blocker.js"></script>
+<!-- VIEWER -->
+<div class="wrap" id="viewer">
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <h1><span class="q">Quick</span><span class="slash">/</span><span class="s">Share</span></h1>
+      </div>
+    </div>
+  </header>
+  <div id="viewerBody"></div>
+</div>
+
+
+<script src="upload.js"></script>
+<script src="upload-colorful.js"></script>
 <script src="block-source-access.js"></script>
 
 </body>
