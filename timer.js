@@ -4,9 +4,9 @@
 const LIVE_MODE = true;
 
 // Your main page (change if needed)
-const HOME_PAGE = ""; 
+const HOME_PAGE = "homepage for Computer.html"; 
 // OR use full link:
-// const HOME_PAGE = "https://your-site.netlify.app";
+// const HOME_PAGE = "";
 
 
 // ================= INIT =================
