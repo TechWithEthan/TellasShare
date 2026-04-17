@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Tellas Share</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="contact.css">
+</head>
+<body>
+
+<canvas id="globe-canvas"></canvas>
+
+<div class="page">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="left">
+    <a href="#" class="logo">
+      <div class="logo-mark"></div>
+      <span class="logo-text">TELLAS <span>SHARE</span></span>
+    </a>
+
+    <p class="eyebrow">Global Network · Est. 2018</p>
+
+    <h1 class="headline">
+      Let's build<br>
+      something <em>great</em><br>
+      together
+    </h1>
+
+    <p class="subtitle">
+      We operate across five continents, connecting people, businesses,
+      and ideas through seamless collaboration. Reach out — we speak your language.
+    </p>
+
+    <p class="offices-label">Our Offices Worldwide</p>
+
+    <div class="offices">
+      <div class="office">
+        <div class="office-city"><span class="flag-dot"></span>New York</div>
+        <div class="office-addr">350 Fifth Avenue,<br>New York, NY 10118</div>
+        <div class="office-phone">+1 (212) 900 0001</div>
+      </div>
+      <div class="office">
+        <div class="office-city"><span class="flag-dot"></span>London</div>
+        <div class="office-addr">30 St Mary Axe,<br>London EC3A 8EP</div>
+        <div class="office-phone">+44 20 7946 0200</div>
+      </div>
+      <div class="office">
+        <div class="office-city"><span class="flag-dot"></span>Dubai</div>
+        <div class="office-addr">Gate Village 9,<br>DIFC, Dubai</div>
+        <div class="office-phone">+971 4 300 0099</div>
+      </div>
+      <div class="office">
+        <div class="office-city"><span class="flag-dot"></span>Singapore</div>
+        <div class="office-addr">Marina Bay Financial,<br>018983 Singapore</div>
+        <div class="office-phone">+65 6900 4000</div>
+      </div>
+    </div>
+
+    <div class="social-row">
+      <a href="#" class="social-btn">LinkedIn</a>
+      <a href="#" class="social-btn">Twitter / X</a>
+      <a href="#" class="social-btn">Instagram</a>
+      <a href="#" class="social-btn">Press Kit</a>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <div class="right">
+
+    <div class="form-header">
+      <h2>Send us a message</h2>
+      <p>We'll get back to you within one business day, wherever you are.</p>
+    </div>
+
+    <form id="contact-form" novalidate>
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" placeholder="Jean-Pierre" required>
+        </div>
+
+        <div class="field">
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" placeholder="Müller" required>
+        </div>
+
+        <div class="field full">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="hello@yourcompany.com" required>
+        </div>
+
+        <div class="field full">
+          <label>Phone Number</label>
+          <div class="phone-wrap">
+            <select class="phone-code" id="phone-code">
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+971">🇦🇪 +971</option>
+              <option value="+65">🇸🇬 +65</option>
+              <option value="+81">🇯🇵 +81</option>
+              <option value="+86">🇨🇳 +86</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+55">🇧🇷 +55</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+27">🇿🇦 +27</option>
+            </select>
+            <input type="tel" id="phone-num" class="phone-num" placeholder="000 000 0000">
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="region">Region of Interest</label>
+          <select id="region">
+            <option value="">— Select a region —</option>
+            <option>Americas</option>
+            <option>Europe & Middle East</option>
+            <option>Asia Pacific</option>
+            <option>Africa</option>
+            <option>Global / Multi-Region</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="subject">Subject</label>
+          <select id="subject">
+            <option value="">— Select a topic —</option>
+            <option>Partnership Inquiry</option>
+            <option>Enterprise Solutions</option>
+            <option>Press & Media</option>
+            <option>Investor Relations</option>
+            <option>Technical Support</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Tell us about your project, goals, or how we can help…" required></textarea>
+        </div>
+
+      </div><!-- /form-grid -->
+
+      <div class="submit-row">
+        <p class="privacy-note">By submitting, you agree to our Privacy Policy and International Data Terms.</p>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </div>
+
+      <div class="success-msg" id="success-msg">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Message received</div>
+        <div class="success-body">Thank you for reaching out. A member of our global team will respond within one business day.</div>
+      </div>
+
+    </form>
+
+    <div class="form-divider"><span>or contact us directly</span></div>
+
+    <div class="direct-contacts">
+      <div class="contact-card">
+        <div class="contact-card-type">General</div>
+        <div class="contact-card-val">hello@tellasshare.com</div>
+        <div class="contact-card-sub">Responses in 24h</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-type">Enterprise</div>
+        <div class="contact-card-val">enterprise@tellasshare.com</div>
+        <div class="contact-card-sub">Priority response</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-type">Press & Media</div>
+        <div class="contact-card-val">press@tellasshare.com</div>
+        <div class="contact-card-sub">Media kit available</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-type">Support</div>
+        <div class="contact-card-val">support@tellasshare.com</div>
+        <div class="contact-card-sub">24/7 global support</div>
+      </div>
+    </div>
+
+  </div><!-- /right -->
+</div><!-- /page -->
+
+<script>
+/* ── GLOBE CANVAS ── */
+(function() {
+  const canvas = document.getElementById('globe-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, cx, cy, radius, nodes = [], arcs = [], frame = 0;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    cx = W * 0.55;
+    cy = H * 0.5;
+    radius = Math.min(W, H) * 0.38;
+    buildGlobe();
+  }
+
+  function buildGlobe() {
+    nodes = [];
+    // lat/lon grid points
+    for (let lat = -80; lat <= 80; lat += 20) {
+      for (let lon = -180; lon < 180; lon += 20) {
+        const phi   = (90 - lat) * Math.PI / 180;
+        const theta = (lon + 180) * Math.PI / 180;
+        nodes.push({ lat, lon, phi, theta, pulse: Math.random() * Math.PI * 2 });
+      }
+    }
+
+    // hotspot cities
+    const cities = [
+      { lat: 40.7, lon: -74.0 }, // New York
+      { lat: 51.5, lon: -0.1 },  // London
+      { lat: 25.2, lon: 55.3 },  // Dubai
+      { lat: 1.35, lon: 103.8 }, // Singapore
+      { lat: 48.9, lon:  2.3 },  // Paris
+      { lat: 35.7, lon: 139.7 }, // Tokyo
+      { lat:-33.9, lon: 18.4 },  // Cape Town
+      { lat:-23.5, lon:-46.6 },  // São Paulo
+    ];
+
+    arcs = [];
+    for (let i = 0; i < cities.length; i++) {
+      for (let j = i + 1; j < cities.length; j++) {
+        if (Math.random() < 0.45) {
+          arcs.push({ from: cities[i], to: cities[j], progress: Math.random(), speed: 0.002 + Math.random() * 0.003 });
+        }
+      }
+    }
+  }
+
+  function project(phi, theta, tilt) {
+    // simple spherical projection with Y-axis rotation
+    const x0 = Math.sin(phi) * Math.cos(theta);
+    const y0 = -Math.cos(phi);
+    const z0 = Math.sin(phi) * Math.sin(theta);
+    // rotate around Y
+    const sinR = Math.sin(tilt), cosR = Math.cos(tilt);
+    const x1 = x0 * cosR + z0 * sinR;
+    const y1 = y0;
+    const z1 = -x0 * sinR + z0 * cosR;
+    return { x: cx + x1 * radius, y: cy + y1 * radius, z: z1 };
+  }
+
+  function cityProject(lat, lon, tilt) {
+    const phi   = (90 - lat) * Math.PI / 180;
+    const theta = (lon + 180) * Math.PI / 180;
+    return project(phi, theta, tilt);
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const tilt = frame * 0.0015;
+
+    // outer glow
+    const grd = ctx.createRadialGradient(cx, cy, radius * 0.6, cx, cy, radius * 1.2);
+    grd.addColorStop(0, 'rgba(201,168,76,0.04)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    // globe circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(201,168,76,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // grid dots
+    nodes.forEach(n => {
+      const p = project(n.phi, n.theta, tilt);
+      if (p.z < -0.1) return; // back face cull
+      const alpha = 0.15 + p.z * 0.45;
+      const pulsed = 0.5 + 0.5 * Math.sin(n.pulse + frame * 0.02);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1 + pulsed * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,168,76,${alpha * 0.7})`;
+      ctx.fill();
+    });
+
+    // latitude lines (dashed)
+    for (let lat = -60; lat <= 60; lat += 30) {
+      ctx.beginPath();
+      let first = true;
+      for (let lon = -180; lon <= 180; lon += 4) {
+        const phi   = (90 - lat) * Math.PI / 180;
+        const theta = (lon + 180) * Math.PI / 180;
+        const p = project(phi, theta, tilt);
+        if (p.z < 0) { first = true; continue; }
+        if (first) { ctx.moveTo(p.x, p.y); first = false; }
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // arcs between cities
+    arcs.forEach(arc => {
+      arc.progress += arc.speed;
+      if (arc.progress > 1.4) arc.progress = -0.2;
+
+      const from = cityProject(arc.from.lat, arc.from.lon, tilt);
+      const to   = cityProject(arc.to.lat,   arc.to.lon,   tilt);
+      if (from.z < 0 || to.z < 0) return;
+
+      // draw moving particle along great circle approximation
+      const t = Math.max(0, Math.min(1, arc.progress));
+      const px = lerp(from.x, to.x, t);
+      const py = lerp(from.y, to.y, t) - Math.sin(t * Math.PI) * 30;
+
+      // trail
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      const mid = { x: (from.x + to.x) / 2, y: (from.y + to.y) / 2 - 30 };
+      ctx.quadraticCurveTo(mid.x, mid.y, px, py);
+      ctx.strokeStyle = `rgba(201,168,76,0.18)`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // particle
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(201,168,76,0.85)';
+      ctx.fill();
+
+      // city dots
+      [from, to].forEach(pt => {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(201,168,76,0.5)';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 5 + Math.sin(frame * 0.04) * 2, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+    });
+
+    frame++;
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+
+/* ── FORM SUBMISSION ── */
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const fname   = document.getElementById('fname').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!fname || !email || !message) {
+    // simple shake on empty required fields
+    [document.getElementById('fname'), document.getElementById('email'), document.getElementById('message')]
+      .forEach(el => {
+        if (!el.value.trim()) {
+          el.style.borderColor = '#c9584c';
+          el.addEventListener('input', () => el.style.borderColor = '', { once: true });
+        }
+      });
+    return;
+  }
+
+  const btn = this.querySelector('.submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    this.querySelector('.form-grid').style.display = 'none';
+    this.querySelector('.submit-row').style.display = 'none';
+    const msg = document.getElementById('success-msg');
+    msg.classList.add('show');
+  }, 1400);
+});
+</script>
+</body>
+</html>
